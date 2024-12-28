@@ -1,4 +1,4 @@
-namespace Sleepingbear.Functional.Common;
+namespace SleepingBear.Functional.Common;
 
 /// <summary>
 ///     Extensions methods for <see cref="Exception" /> classes.

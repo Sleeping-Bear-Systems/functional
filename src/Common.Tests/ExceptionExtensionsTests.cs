@@ -1,5 +1,3 @@
-using Sleepingbear.Functional.Common;
-
 namespace SleepingBear.Functional.Common.Tests;
 
 /// <summary>

@@ -3,7 +3,7 @@ using Sleepingbear.Functional.Common;
 namespace SleepingBear.Functional.Common.Tests;
 
 /// <summary>
-///     Tests for <see cref="NUnit.Framework.ExceptionExtensions" />.
+///     Tests for <see cref="ExceptionExtensions" />.
 /// </summary>
 internal static class ExceptionExtensionsTests
 {

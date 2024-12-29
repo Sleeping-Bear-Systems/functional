@@ -85,5 +85,4 @@ internal static class ResultTests
             Assert.That(resultError, Is.EqualTo(error));
         });
     }
-
 }

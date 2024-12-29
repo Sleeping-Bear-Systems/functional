@@ -65,10 +65,12 @@ public static class Option
     /// <param name="some">The value being lifted.</param>
     /// <typeparam name="T">The type of the value being lifted.</typeparam>
     /// <returns>A <see cref="Option{T}"/>.</returns>
-    public static Option<T> ToOption<T>(this T? some) where T : notnull =>
-        some is null
+    public static Option<T> ToOption<T>(this T? some) where T : notnull
+    {
+        return some is null
             ? Option<T>.None
             : new Option<T>(some);
+    }
 
     /// <summary>
     /// Conditionally lifts a value to a <see cref="Option{T}"/>.
@@ -95,7 +97,8 @@ public static class Option
     /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
     /// <returns>A <see cref="Option{TOut}"/>.</returns>
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public static Option<TOut> Map<TIn, TOut>(this Option<TIn> option, Func<TIn, TOut> mapFunc) where TIn : notnull where TOut : notnull
+    public static Option<TOut> Map<TIn, TOut>(this Option<TIn> option, Func<TIn, TOut> mapFunc)
+        where TIn : notnull where TOut : notnull
     {
         ArgumentNullException.ThrowIfNull(mapFunc);
 
@@ -114,7 +117,8 @@ public static class Option
     /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
     /// <returns>A <see cref="Option{TOut}"/>.</returns>
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public static Option<TOut> Bind<TIn, TOut>(this Option<TIn> option, Func<TIn, Option<TOut>> bindFunc) where TIn : notnull where TOut : notnull
+    public static Option<TOut> Bind<TIn, TOut>(this Option<TIn> option, Func<TIn, Option<TOut>> bindFunc)
+        where TIn : notnull where TOut : notnull
     {
         ArgumentNullException.ThrowIfNull(bindFunc);
 

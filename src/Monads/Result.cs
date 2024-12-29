@@ -71,7 +71,10 @@ public static class Result
     /// <param name="ok">The value being lifted.</param>
     /// <typeparam name="T">The type of the lifted value.</typeparam>
     /// <returns>A <see cref="Result{T}"/>.</returns>
-    public static Result<T> ToResult<T>(this T ok) where T : notnull => new(ok);
+    public static Result<T> ToResult<T>(this T ok) where T : notnull
+    {
+        return new Result<T>(ok);
+    }
 
     /// <summary>
     /// Lifts a <see cref="Error"/> to a <see cref="Result{T}"/>.
@@ -79,5 +82,8 @@ public static class Result
     /// <param name="error">The error being lifted.</param>
     /// <typeparam name="T">THe type of the lifted value.</typeparam>
     /// <returns>A <see cref="Result{T}"/>.</returns>
-    public static Result<T> ToResult<T>(this Error error) where T : notnull => new(error);
+    public static Result<T> ToResult<T>(this Error error) where T : notnull
+    {
+        return new Result<T>(error);
+    }
 }

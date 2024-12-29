@@ -123,7 +123,7 @@ internal static class OptionTests
         var option = Option<int>.None.Map(x => x.ToString(CultureInfo.InvariantCulture));
         Assert.That(option.IsNone, Is.True);
     }
-    
+
     [Test]
     public static void Bind_Some_ReturnsSome()
     {

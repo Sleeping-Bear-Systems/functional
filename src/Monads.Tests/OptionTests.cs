@@ -43,6 +43,25 @@ internal static class OptionTests
     }
 
     [Test]
+    public static void ImplicitOperator_Null_ReturnsNone()
+    {
+        Option<string> option = null;
+        Assert.That(option.IsNone);
+    }
+    
+    [Test]
+    public static void ImplicitOperator_NotNull_ReturnsSome()
+    {
+        Option<string> option = "test";
+        var (isSome, some) = option;
+        Assert.Multiple(() =>
+        {
+            Assert.That(isSome, Is.True);
+            Assert.That(some, Is.EqualTo(expected: "test"));
+        });
+    }
+
+    [Test]
     public static void ToOption_NotNull_ReturnsSome()
     {
         var value = new object();

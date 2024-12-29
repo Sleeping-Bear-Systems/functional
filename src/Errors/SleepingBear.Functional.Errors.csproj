@@ -5,10 +5,10 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Description>Type abstractions and helper/extensions methods for functional programming.</Description>
+        <Description>Error types and helper/extensions methods for functional programming.</Description>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageIcon>icon.png</PackageIcon>
-        <PackageId>SleepingBear.Functional.Common</PackageId>
+        <PackageId>SleepingBear.Functional.Errors</PackageId>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 

@@ -40,4 +40,33 @@ internal static class OptionTests
         Assert.That(Option<string>.None.IsNone, Is.False);
         Assert.That(Option<string>.None.IsNone, Is.True);
     }
+    
+    [Test]
+    public static void ToOption_NotNull_ReturnsSome()
+    {
+        var value = new object();
+        var option = value.ToOption();
+        var (isSome, some) = option;
+        Assert.Multiple(() =>
+        {
+            Assert.That(option.IsSome, Is.True);
+            Assert.That(option.IsNone, Is.False);
+            Assert.That(isSome, Is.True);
+            Assert.That(some, Is.EqualTo(value));
+        });
+    }
+
+    [Test]
+    public static void ToOption_Null_ReturnsNone()
+    {
+        var option = default(object).ToOption();
+        var (isSome, some) = option;
+        Assert.Multiple(() =>
+        {
+            Assert.That(option.IsSome, Is.False);
+            Assert.That(option.IsNone, Is.True);
+            Assert.That(isSome, Is.False);
+            Assert.That(some, Is.Null);
+        });
+    }
 }

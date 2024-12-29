@@ -52,3 +52,21 @@ public readonly record struct Option<T> where T : notnull
         some = this._some;
     }
 }
+
+/// <summary>
+/// Helper methods for <see cref="Option{T}"/>.
+/// </summary>
+[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+public static class Option
+{
+    /// <summary>
+    /// Lifts a value to a <see cref="Option{T}"/> instance.
+    /// </summary>
+    /// <param name="some">The value being lifted.</param>
+    /// <typeparam name="T">The type of the value being lifted.</typeparam>
+    /// <returns>A <see cref="Option{T}"/>.</returns>
+    public static Option<T> ToOption<T>(this T? some) where T : notnull =>
+        some is null 
+            ? Option<T>.None 
+            : new Option<T>(some);
+}

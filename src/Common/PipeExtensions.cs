@@ -105,4 +105,16 @@ public static class PipeExtensions
         await func(value).ConfigureAwait(false);
         return value;
     }
+
+    /// <summary>
+    /// Executes a pipe function if the function is not null.
+    /// </summary>
+    /// <param name="value">The value being piped.</param>
+    /// <param name="func">The pipe function. (optional)</param>
+    /// <typeparam name="TIn">The type of the piped value.</typeparam>
+    /// <returns>The piped value if the pipe function is null or the result of the pipe function otherwise.</returns>
+    public static TIn PipeIfNotNull<TIn>(this TIn value, Func<TIn, TIn>? func)
+    {
+        return func is null ? value : func(value);
+    }
 }

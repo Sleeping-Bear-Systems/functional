@@ -211,7 +211,7 @@ public static class Result
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public static async Task<Result<TOut>> Bind<TIn, TOut>(
+    public static async Task<Result<TOut>> BindAsync<TIn, TOut>(
         this Task<Result<TIn>> task,
         Func<TIn, Result<TOut>> bindFunc)
         where TIn : notnull where TOut : notnull
@@ -236,7 +236,7 @@ public static class Result
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public static async Task<Result<TOut>> Bind<TIn, TOut>(
+    public static async Task<Result<TOut>> BindAsync<TIn, TOut>(
         this Task<Result<TIn>> task,
         Func<TIn, Task<Result<TOut>>> bindFunc)
         where TIn : notnull where TOut : notnull
@@ -421,5 +421,29 @@ public static class Result
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Binds a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="predicate"></param>
+    /// <param name="bindFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static Result<T> BindIf<T>(
+        this Result<T> result,
+        Func<T, bool> predicate,
+        Func<T, Result<T>> bindFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(bindFunc);
+
+        var (isOk, ok, _) = result;
+        return isOk && predicate(ok!)
+            ? bindFunc(ok!)
+            : result;
     }
 }

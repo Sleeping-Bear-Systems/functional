@@ -464,4 +464,18 @@ public static class Option
 
         return option;
     }
+
+    /// <summary>
+    /// Tries to get the value of an <see cref="Option{T}"/>.
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="value"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static bool Try<T>(this Option<T> option, [NotNullWhen(true)] out T? value) where T : notnull
+    {
+        var (isSome, some) = option;
+        value = isSome ? some : default;
+        return isSome;
+    }
 }

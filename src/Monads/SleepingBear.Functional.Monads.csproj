@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Description>Monad types and helper/extensions methods for functional programming.</Description>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageId>SleepingBear.Functional.Monads</PackageId>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../icon.png" Pack="true" PackagePath="\"/>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="$(AssemblyName).Tests"/>
+    </ItemGroup>
+
+</Project>

@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\SleepingBear.Functional.Common.csproj"/>
+        <ProjectReference Include="..\Errors\SleepingBear.Functional.Errors.csproj" />
     </ItemGroup>
 
 </Project>

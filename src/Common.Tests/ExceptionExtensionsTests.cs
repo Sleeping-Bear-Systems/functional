@@ -9,7 +9,7 @@ internal static class ExceptionExtensionsTests
     public static void FailFastIfCritical_NonCriticalException_ReturnsException()
     {
         var exception = new InvalidOperationException();
-        var result = exception.FailFastIfCritical("message");
+        var result = exception.FailFastIfCritical(null);
         Assert.That(result, Is.EqualTo(exception));
     }
 }

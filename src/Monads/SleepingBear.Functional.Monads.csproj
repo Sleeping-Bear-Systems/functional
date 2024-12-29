@@ -28,4 +28,8 @@
         <InternalsVisibleTo Include="$(AssemblyName).Tests"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Errors\SleepingBear.Functional.Errors.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -57,6 +57,7 @@ public readonly record struct Option<T> where T : notnull
 /// Helper methods for <see cref="Option{T}"/>.
 /// </summary>
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class Option
 {
     /// <summary>
@@ -65,10 +66,12 @@ public static class Option
     /// <param name="some">The value being lifted.</param>
     /// <typeparam name="T">The type of the value being lifted.</typeparam>
     /// <returns>A <see cref="Option{T}"/>.</returns>
-    public static Option<T> ToOption<T>(this T? some) where T : notnull =>
-        some is null
+    public static Option<T> ToOption<T>(this T? some) where T : notnull
+    {
+        return some is null
             ? Option<T>.None
             : new Option<T>(some);
+    }
 
     /// <summary>
     /// Conditionally lifts a value to a <see cref="Option{T}"/>.
@@ -84,5 +87,135 @@ public static class Option
         return some is not null && predicate(some)
             ? new Option<T>(some)
             : Option<T>.None;
+    }
+
+    /// <summary>
+    /// Maps a <see cref="Option{TIn}"/> to <see cref="Option{TOut}"/>.
+    /// </summary>
+    /// <param name="option">The <see cref="Option{TIn}"/> being mapped.</param>
+    /// <param name="mapFunc">The map function.</param>
+    /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
+    /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
+    /// <returns>A <see cref="Option{TOut}"/>.</returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static Option<TOut> Map<TIn, TOut>(this Option<TIn> option, Func<TIn, TOut> mapFunc)
+        where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(mapFunc);
+
+        var (isSome, some) = option;
+        return isSome
+            ? new Option<TOut>(mapFunc(some!))
+            : Option<TOut>.None;
+    }
+
+    /// <summary>
+    /// Maps a <see cref="Option{TIn}"/> to <see cref="Option{TOut}"/> asynchronously.
+    /// </summary>
+    /// <param name="task">The <see cref="Option{TIn}"/> being mapped.</param>
+    /// <param name="mapFunc">The map function.</param>
+    /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
+    /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
+    /// <returns>A <see cref="Option{TOut}"/>.</returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<Option<TOut>> MapAsync<TIn, TOut>(this Task<Option<TIn>> task, Func<TIn, TOut> mapFunc)
+        where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(mapFunc);
+
+        var (isSome, some) = await task.ConfigureAwait(false);
+        return isSome
+            ? new Option<TOut>(mapFunc(some!))
+            : Option<TOut>.None;
+    }
+
+    /// <summary>
+    /// Maps a <see cref="Option{TIn}"/> to <see cref="Option{TOut}"/> asynchronously.
+    /// </summary>
+    /// <param name="task">The <see cref="Option{TIn}"/> being mapped.</param>
+    /// <param name="mapFuncAsync">The map function.</param>
+    /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
+    /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
+    /// <returns>A <see cref="Option{TOut}"/>.</returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<Option<TOut>> MapAsync<TIn, TOut>(
+        this Task<Option<TIn>> task,
+        Func<TIn, Task<TOut>> mapFuncAsync)
+        where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(mapFuncAsync);
+
+        var (isSome, some) = await task.ConfigureAwait(false);
+        return isSome
+            ? new Option<TOut>(await mapFuncAsync(some!).ConfigureAwait(false))
+            : Option<TOut>.None;
+    }
+
+    /// <summary>
+    /// Binds a <see cref="Option{TIn}"/> to a <see cref="Option{TOut}"/>.
+    /// </summary>
+    /// <param name="option">The <see cref="Option{TIn}"/> being mapped.</param>
+    /// <param name="bindFunc">The bind function.</param>
+    /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
+    /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
+    /// <returns>A <see cref="Option{TOut}"/>.</returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static Option<TOut> Bind<TIn, TOut>(this Option<TIn> option, Func<TIn, Option<TOut>> bindFunc)
+        where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(bindFunc);
+
+        var (isSome, some) = option;
+        return isSome
+            ? bindFunc(some!)
+            : Option<TOut>.None;
+    }
+
+    /// <summary>
+    /// Binds a <see cref="Option{TIn}"/> to a <see cref="Option{TOut}"/>.
+    /// </summary>
+    /// <param name="task">A <see cref="Task{TResult}"/> containing the <see cref="Option{TIn}"/> being mapped.</param>
+    /// <param name="bindFunc">The bind function.</param>
+    /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
+    /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
+    /// <returns>A <see cref="Option{TOut}"/>.</returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<Option<TOut>> BindAsync<TIn, TOut>(
+        this Task<Option<TIn>> task,
+        Func<TIn, Option<TOut>> bindFunc)
+        where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(bindFunc);
+
+        var (isSome, some) = await task.ConfigureAwait(false);
+        return isSome
+            ? bindFunc(some!)
+            : Option<TOut>.None;
+    }
+
+    /// <summary>
+    /// Binds a <see cref="Option{TIn}"/> to a <see cref="Option{TOut}"/>.
+    /// </summary>
+    /// <param name="task">A <see cref="Task{TResult}"/> containing <see cref="Option{TIn}"/> being mapped.</param>
+    /// <param name="bindFuncAsync">The bind function.</param>
+    /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
+    /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
+    /// <returns>A <see cref="Task{TResult}"/> containing the <see cref="Option{TOut}"/>.</returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<Option<TOut>> BindAsync<TIn, TOut>(
+        this Task<Option<TIn>> task,
+        Func<TIn, Task<Option<TOut>>> bindFuncAsync)
+        where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(bindFuncAsync);
+
+        var (isSome, some) = await task.ConfigureAwait(false);
+        return isSome
+            ? await bindFuncAsync(some!).ConfigureAwait(false)
+            : Option<TOut>.None;
     }
 }

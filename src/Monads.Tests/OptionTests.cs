@@ -1,4 +1,6 @@
-﻿namespace SleepingBear.Functional.Monads.Tests;
+﻿using System.Globalization;
+
+namespace SleepingBear.Functional.Monads.Tests;
 
 /// <summary>
 /// Test for <see cref="Option{T}"/>.
@@ -102,4 +104,43 @@ internal static class OptionTests
         });
     }
 
+    [Test]
+    public static void Map_Some_ReturnsSome()
+    {
+        var option = 1234.ToOption().Map(x => x.ToString(CultureInfo.InvariantCulture));
+        var (isSome, some) = option;
+        Assert.Multiple(() =>
+        {
+            Assert.That(option.IsSome, Is.True);
+            Assert.That(isSome, Is.True);
+            Assert.That(some, Is.EqualTo("1234"));
+        });
+    }
+
+    [Test]
+    public static void Map_None_ReturnsNone()
+    {
+        var option = Option<int>.None.Map(x => x.ToString(CultureInfo.InvariantCulture));
+        Assert.That(option.IsNone, Is.True);
+    }
+    
+    [Test]
+    public static void Bind_Some_ReturnsSome()
+    {
+        var option = 1234.ToOption().Bind(x => x.ToString(CultureInfo.InvariantCulture).ToOption());
+        var (isSome, some) = option;
+        Assert.Multiple(() =>
+        {
+            Assert.That(option.IsSome, Is.True);
+            Assert.That(isSome, Is.True);
+            Assert.That(some, Is.EqualTo("1234"));
+        });
+    }
+
+    [Test]
+    public static void Bind_None_ReturnsNone()
+    {
+        var option = Option<int>.None.Bind(x => x.ToString(CultureInfo.InvariantCulture).ToOption());
+        Assert.That(option.IsNone, Is.True);
+    }
 }

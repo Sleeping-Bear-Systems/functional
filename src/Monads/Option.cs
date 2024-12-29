@@ -85,4 +85,42 @@ public static class Option
             ? new Option<T>(some)
             : Option<T>.None;
     }
+
+    /// <summary>
+    /// Maps a <see cref="Option{TIn}"/> to <see cref="Option{TOut}"/>.
+    /// </summary>
+    /// <param name="option">The <see cref="Option{TIn}"/> being mapped.</param>
+    /// <param name="mapFunc">The map function.</param>
+    /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
+    /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
+    /// <returns>A <see cref="Option{TOut}"/>.</returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static Option<TOut> Map<TIn, TOut>(this Option<TIn> option, Func<TIn, TOut> mapFunc) where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(mapFunc);
+
+        var (isSome, some) = option;
+        return isSome
+            ? new Option<TOut>(mapFunc(some!))
+            : Option<TOut>.None;
+    }
+
+    /// <summary>
+    /// Binds a <see cref="Option{TIn}"/> to a <see cref="Option{TOut}"/>.
+    /// </summary>
+    /// <param name="option">The <see cref="Option{TIn}"/> being mapped.</param>
+    /// <param name="bindFunc">The bind function.</param>
+    /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
+    /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
+    /// <returns>A <see cref="Option{TOut}"/>.</returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static Option<TOut> Bind<TIn, TOut>(this Option<TIn> option, Func<TIn, Option<TOut>> bindFunc) where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(bindFunc);
+
+        var (isSome, some) = option;
+        return isSome
+            ? bindFunc(some!)
+            : Option<TOut>.None;
+    }
 }

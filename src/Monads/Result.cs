@@ -131,6 +131,17 @@ public static class Result
     {
         return new Result<T>(value.ToGenericError());
     }
+    
+    /// <summary>
+    /// Converts an exception to a <see cref="Result{T}"/>.
+    /// </summary>
+    /// <param name="ex">The exception being lifted.</param>
+    /// <typeparam name="T">The type of the value being lifted.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static Result<T> ToResultError<T>(this Exception ex) where T : notnull
+    {
+        return new ExceptionError(ex).ToResultError<T>();
+    }
 
     /// <summary>
     /// Maps a <see cref="Result{TIn}"/> to a <see cref="Result{TOut}"/>.

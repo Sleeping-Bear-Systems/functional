@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using SleepingBear.Functional.Errors;
 
+// ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
 namespace SleepingBear.Functional.Monads;

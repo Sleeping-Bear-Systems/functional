@@ -228,4 +228,78 @@ public static class Result
             (false, _, var error) => error!.ToResult<TOut>()
         };
     }
+    
+    /// <summary>
+    /// Matches a <see cref="Result{TIn}"/> to a value.
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="okFunc"></param>
+    /// <param name="errorFunc"></param>
+    /// <typeparam name="TIn"></typeparam>
+    /// <typeparam name="TOut"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static TOut Match<TIn, TOut>(this Result<TIn> result, Func<TIn, TOut> okFunc, Func<Error, TOut> errorFunc)
+        where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(okFunc);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        return result switch
+        {
+            (true, var ok, _) => okFunc(ok!),
+            (false, _, var error) => errorFunc(error!)
+        };
+    }
+    
+    /// <summary>
+    /// Matches a <see cref="Result{TIn}"/> to a value asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="okFunc"></param>
+    /// <param name="errorFunc"></param>
+    /// <typeparam name="TIn"></typeparam>
+    /// <typeparam name="TOut"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<TOut> MatchAsync<TIn, TOut>(this Task<Result<TIn>> task, Func<TIn, TOut> okFunc, Func<Error, TOut> errorFunc)
+        where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(okFunc);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        var result = await task.ConfigureAwait(false);
+        return result switch
+        {
+            (true, var ok, _) => okFunc(ok!),
+            (false, _, var error) => errorFunc(error!)
+        };
+    }
+
+    /// <summary>
+    /// Matches a <see cref="Result{TIn}"/> to a value asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="okFunc"></param>
+    /// <param name="errorFunc"></param>
+    /// <typeparam name="TIn"></typeparam>
+    /// <typeparam name="TOut"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<TOut> MatchAsync<TIn, TOut>(this Task<Result<TIn>> task, Func<TIn, Task<TOut>> okFunc, Func<Error, Task<TOut>> errorFunc)
+        where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(okFunc);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        var result = await task.ConfigureAwait(false);
+        return result switch
+        {
+            (true, var ok, _) => await okFunc(ok!).ConfigureAwait(false),
+            (false, _, var error) => await errorFunc(error!).ConfigureAwait(false)
+        };
+    }
+
 }

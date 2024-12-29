@@ -59,3 +59,25 @@ public readonly record struct Result<T> where T : notnull
         error = this._error;
     }
 }
+
+/// <summary>
+/// Extension methods for <see cref="Result{T}"/>.
+/// </summary>
+public static class Result
+{
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/>.
+    /// </summary>
+    /// <param name="ok">The value being lifted.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static Result<T> ToResult<T>(this T ok) where T : notnull => new(ok);
+
+    /// <summary>
+    /// Lifts a <see cref="Error"/> to a <see cref="Result{T}"/>.
+    /// </summary>
+    /// <param name="error">The error being lifted.</param>
+    /// <typeparam name="T">THe type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static Result<T> ToResult<T>(this Error error) where T : notnull => new(error);
+}

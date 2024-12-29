@@ -60,13 +60,29 @@ public readonly record struct Option<T> where T : notnull
 public static class Option
 {
     /// <summary>
-    /// Lifts a value to a <see cref="Option{T}"/> instance.
+    /// Lifts a value to a <see cref="Option{T}"/>.
     /// </summary>
     /// <param name="some">The value being lifted.</param>
     /// <typeparam name="T">The type of the value being lifted.</typeparam>
     /// <returns>A <see cref="Option{T}"/>.</returns>
     public static Option<T> ToOption<T>(this T? some) where T : notnull =>
-        some is null 
-            ? Option<T>.None 
+        some is null
+            ? Option<T>.None
             : new Option<T>(some);
+
+    /// <summary>
+    /// Conditionally lifts a value to a <see cref="Option{T}"/>.
+    /// </summary>
+    /// <param name="some"></param>
+    /// <param name="predicate"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static Option<T> ToOption<T>(this T? some, Func<T, bool> predicate) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return some is not null && predicate(some)
+            ? new Option<T>(some)
+            : Option<T>.None;
+    }
 }

@@ -37,7 +37,6 @@ internal static class OptionTests
     [Test]
     public static void None_ValidatesBehavior()
     {
-        Assert.That(Option<string>.None.IsNone, Is.False);
         Assert.That(Option<string>.None.IsNone, Is.True);
     }
     
@@ -69,4 +68,38 @@ internal static class OptionTests
             Assert.That(some, Is.Null);
         });
     }
+
+    [Test]
+    public static void ToOption_PredicateWithNull_ReturnsNone()
+    {
+        var option = default(object).ToOption(_ => true);
+        Assert.That(option.IsNone, Is.True);
+    }
+
+    [Test]
+    public static void ToOption_PredicateTrue_ReturnsSome()
+    {
+        var option = 1234.ToOption(_ => true);
+        var (isSome, some) = option;
+        Assert.Multiple(() =>
+        {
+            Assert.That(option.IsSome, Is.True);
+            Assert.That(isSome, Is.True);
+            Assert.That(some, Is.EqualTo(1234));
+        });
+    }
+
+    [Test]
+    public static void ToOption_PredicateFalse_ReturnsSome()
+    {
+        var option = 1234.ToOption(_ => false);
+        var (isSome, some) = option;
+        Assert.Multiple(() =>
+        {
+            Assert.That(option.IsSome, Is.False);
+            Assert.That(isSome, Is.False);
+            Assert.That(some, Is.EqualTo(0));
+        });
+    }
+    
 }

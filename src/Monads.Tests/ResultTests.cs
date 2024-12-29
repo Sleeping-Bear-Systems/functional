@@ -53,4 +53,37 @@ internal static class ResultTests
             Assert.That(resultError, Is.EqualTo(error));
         });
     }
+
+    [Test]
+    public static void ToResult_Ok_ReturnsOk()
+    {
+        var value = new object();
+        var result = value.ToResult();
+        var (isOk, ok, error) = result;
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.IsOk, Is.True);
+            Assert.That(result.IsError, Is.False);
+            Assert.That(isOk, Is.True);
+            Assert.That(ok, Is.EqualTo(value));
+            Assert.That(error, Is.Null);
+        });
+    }
+
+    [Test]
+    public static void ToResult_Error_ReturnsError()
+    {
+        var error = new GenericError<string>("error");
+        var result = error.ToResult<string>();
+        var (isOk, ok, resultError) = result;
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.IsOk, Is.False);
+            Assert.That(result.IsError, Is.True);
+            Assert.That(isOk, Is.False);
+            Assert.That(ok, Is.Null);
+            Assert.That(resultError, Is.EqualTo(error));
+        });
+    }
+
 }

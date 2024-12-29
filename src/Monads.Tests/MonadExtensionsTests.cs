@@ -61,7 +61,7 @@ internal static class MonadExtensionsTests
         var option = UnknownError.Value.ToResultError<string>().ToOption();
         Assert.That(option.IsNone, Is.True);
     }
-    
+
     [Test]
     public static void ToOption_IsOk_ReturnsSome()
     {

@@ -48,7 +48,7 @@ internal static class OptionTests
         Option<string> option = null;
         Assert.That(option.IsNone);
     }
-    
+
     [Test]
     public static void ImplicitOperator_NotNull_ReturnsSome()
     {

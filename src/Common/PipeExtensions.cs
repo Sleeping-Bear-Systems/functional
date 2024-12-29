@@ -36,7 +36,7 @@ public static class PipeExtensions
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(func);
 
-        var value = await task.ConfigureAwait(false);
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
         return func(value);
     }
 
@@ -53,8 +53,8 @@ public static class PipeExtensions
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(func);
 
-        var value = await task.ConfigureAwait(false);
-        return await func(value).ConfigureAwait(false);
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return await func(value).ConfigureAwait(continueOnCapturedContext: false);
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ public static class PipeExtensions
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(action);
 
-        var value = await task.ConfigureAwait(false);
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
         action(value);
         return value;
     }
@@ -101,8 +101,8 @@ public static class PipeExtensions
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(func);
 
-        var value = await task.ConfigureAwait(false);
-        await func(value).ConfigureAwait(false);
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        await func(value).ConfigureAwait(continueOnCapturedContext: false);
         return value;
     }
 

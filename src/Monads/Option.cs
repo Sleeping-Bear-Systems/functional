@@ -6,8 +6,8 @@ namespace SleepingBear.Functional.Monads;
 /// Monad representing an optional value.
 /// </summary>
 /// <typeparam name="T">The type of the lifted value.</typeparam>
-[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
-[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
+[SuppressMessage(category: "Naming", checkId: "CA1716:Identifiers should not match keywords")]
+[SuppressMessage(category: "Usage", checkId: "CA2225:Operator overloads have named alternates")]
 public readonly record struct Option<T> where T : notnull
 {
     private readonly T? _some;
@@ -67,8 +67,8 @@ public readonly record struct Option<T> where T : notnull
 /// <summary>
 /// Helper methods for <see cref="Option{T}"/>.
 /// </summary>
-[SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
-[SuppressMessage("ReSharper", "UnusedMember.Global")]
+[SuppressMessage(category: "Naming", checkId: "CA1716:Identifiers should not match keywords")]
+[SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global")]
 public static class Option
 {
     /// <summary>
@@ -108,7 +108,7 @@ public static class Option
     /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
     /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
     /// <returns>A <see cref="Option{TOut}"/>.</returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Option<TOut> Map<TIn, TOut>(this Option<TIn> option, Func<TIn, TOut> mapFunc)
         where TIn : notnull where TOut : notnull
     {
@@ -128,14 +128,14 @@ public static class Option
     /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
     /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
     /// <returns>A <see cref="Option{TOut}"/>.</returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Option<TOut>> MapAsync<TIn, TOut>(this Task<Option<TIn>> task, Func<TIn, TOut> mapFunc)
         where TIn : notnull where TOut : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(mapFunc);
 
-        var (isSome, some) = await task.ConfigureAwait(false);
+        var (isSome, some) = await task.ConfigureAwait(continueOnCapturedContext: false);
         return isSome
             ? new Option<TOut>(mapFunc(some!))
             : Option<TOut>.None;
@@ -149,7 +149,7 @@ public static class Option
     /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
     /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
     /// <returns>A <see cref="Option{TOut}"/>.</returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Option<TOut>> MapAsync<TIn, TOut>(
         this Task<Option<TIn>> task,
         Func<TIn, Task<TOut>> mapFuncAsync)
@@ -158,9 +158,9 @@ public static class Option
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(mapFuncAsync);
 
-        var (isSome, some) = await task.ConfigureAwait(false);
+        var (isSome, some) = await task.ConfigureAwait(continueOnCapturedContext: false);
         return isSome
-            ? new Option<TOut>(await mapFuncAsync(some!).ConfigureAwait(false))
+            ? new Option<TOut>(await mapFuncAsync(some!).ConfigureAwait(continueOnCapturedContext: false))
             : Option<TOut>.None;
     }
 
@@ -172,7 +172,7 @@ public static class Option
     /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
     /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
     /// <returns>A <see cref="Option{TOut}"/>.</returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Option<TOut> Bind<TIn, TOut>(this Option<TIn> option, Func<TIn, Option<TOut>> bindFunc)
         where TIn : notnull where TOut : notnull
     {
@@ -192,7 +192,7 @@ public static class Option
     /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
     /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
     /// <returns>A <see cref="Option{TOut}"/>.</returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Option<TOut>> BindAsync<TIn, TOut>(
         this Task<Option<TIn>> task,
         Func<TIn, Option<TOut>> bindFunc)
@@ -201,7 +201,7 @@ public static class Option
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(bindFunc);
 
-        var (isSome, some) = await task.ConfigureAwait(false);
+        var (isSome, some) = await task.ConfigureAwait(continueOnCapturedContext: false);
         return isSome
             ? bindFunc(some!)
             : Option<TOut>.None;
@@ -215,7 +215,7 @@ public static class Option
     /// <typeparam name="TIn">The type of the input lifted value.</typeparam>
     /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
     /// <returns>A <see cref="Task{TResult}"/> containing the <see cref="Option{TOut}"/>.</returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Option<TOut>> BindAsync<TIn, TOut>(
         this Task<Option<TIn>> task,
         Func<TIn, Task<Option<TOut>>> bindFuncAsync)
@@ -224,9 +224,9 @@ public static class Option
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(bindFuncAsync);
 
-        var (isSome, some) = await task.ConfigureAwait(false);
+        var (isSome, some) = await task.ConfigureAwait(continueOnCapturedContext: false);
         return isSome
-            ? await bindFuncAsync(some!).ConfigureAwait(false)
+            ? await bindFuncAsync(some!).ConfigureAwait(continueOnCapturedContext: false)
             : Option<TOut>.None;
     }
 
@@ -239,7 +239,7 @@ public static class Option
     /// <typeparam name="TIn"></typeparam>
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static TOut Match<TIn, TOut>(this Option<TIn> option, Func<TIn, TOut> someFunc, Func<TOut> noneFunc)
         where TIn : notnull
     {
@@ -261,7 +261,7 @@ public static class Option
     /// <typeparam name="TIn"></typeparam>
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<TOut> MatchAsync<TIn, TOut>(
         this Task<Option<TIn>> task,
         Func<TIn, TOut> someFunc,
@@ -271,7 +271,7 @@ public static class Option
         ArgumentNullException.ThrowIfNull(someFunc);
         ArgumentNullException.ThrowIfNull(noneFunc);
 
-        var (isSome, some) = await task.ConfigureAwait(false);
+        var (isSome, some) = await task.ConfigureAwait(continueOnCapturedContext: false);
         return isSome
             ? someFunc(some!)
             : noneFunc();
@@ -281,25 +281,25 @@ public static class Option
     /// Matches a <see cref="Option{T}"/> asynchronously.
     /// </summary>
     /// <param name="task"></param>
-    /// <param name="someFunc"></param>
-    /// <param name="noneFunc"></param>
+    /// <param name="someFuncAsync"></param>
+    /// <param name="noneFuncAsync"></param>
     /// <typeparam name="TIn"></typeparam>
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<TOut> MatchAsync<TIn, TOut>(
         this Task<Option<TIn>> task,
-        Func<TIn, Task<TOut>> someFunc,
-        Func<Task<TOut>> noneFunc) where TIn : notnull
+        Func<TIn, Task<TOut>> someFuncAsync,
+        Func<Task<TOut>> noneFuncAsync) where TIn : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
-        ArgumentNullException.ThrowIfNull(someFunc);
-        ArgumentNullException.ThrowIfNull(noneFunc);
+        ArgumentNullException.ThrowIfNull(someFuncAsync);
+        ArgumentNullException.ThrowIfNull(noneFuncAsync);
 
-        var (isSome, some) = await task.ConfigureAwait(false);
+        var (isSome, some) = await task.ConfigureAwait(continueOnCapturedContext: false);
         return isSome
-            ? await someFunc(some!).ConfigureAwait(false)
-            : await noneFunc().ConfigureAwait(false);
+            ? await someFuncAsync(some!).ConfigureAwait(continueOnCapturedContext: false)
+            : await noneFuncAsync().ConfigureAwait(continueOnCapturedContext: false);
     }
 
     /// <summary>
@@ -311,7 +311,7 @@ public static class Option
     /// <typeparam name="TIn"></typeparam>
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static TOut Match<TIn, TOut>(this Option<TIn> option, Func<TIn, TOut> someFunc, TOut none)
         where TIn : notnull
     {
@@ -332,7 +332,7 @@ public static class Option
     /// <typeparam name="TIn"></typeparam>
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<TOut> MatchAsync<TIn, TOut>(
         this Task<Option<TIn>> task,
         Func<TIn, TOut> someFunc,
@@ -341,7 +341,7 @@ public static class Option
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(someFunc);
 
-        var (isSome, some) = await task.ConfigureAwait(false);
+        var (isSome, some) = await task.ConfigureAwait(continueOnCapturedContext: false);
         return isSome
             ? someFunc(some!)
             : none;
@@ -351,23 +351,23 @@ public static class Option
     /// Matches a <see cref="Option{T}"/> aynchronously.
     /// </summary>
     /// <param name="task"></param>
-    /// <param name="someFunc"></param>
+    /// <param name="someFuncAsync"></param>
     /// <param name="none"></param>
     /// <typeparam name="TIn"></typeparam>
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<TOut> MatchAsync<TIn, TOut>(
         this Task<Option<TIn>> task,
-        Func<TIn, Task<TOut>> someFunc,
+        Func<TIn, Task<TOut>> someFuncAsync,
         TOut none) where TIn : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
-        ArgumentNullException.ThrowIfNull(someFunc);
+        ArgumentNullException.ThrowIfNull(someFuncAsync);
 
-        var (isSome, some) = await task.ConfigureAwait(false);
+        var (isSome, some) = await task.ConfigureAwait(continueOnCapturedContext: false);
         return isSome
-            ? await someFunc(some!).ConfigureAwait(false)
+            ? await someFuncAsync(some!).ConfigureAwait(continueOnCapturedContext: false)
             : none;
     }
 
@@ -379,7 +379,7 @@ public static class Option
     /// <param name="noneAction"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Option<T> Tap<T>(
         this Option<T> option,
         Action<T> someAction,
@@ -409,7 +409,7 @@ public static class Option
     /// <param name="noneAction"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Option<T>> TapAsync<T>(
         this Task<Option<T>> task,
         Action<T> someAction,
@@ -419,7 +419,7 @@ public static class Option
         ArgumentNullException.ThrowIfNull(someAction);
         ArgumentNullException.ThrowIfNull(noneAction);
 
-        var option = await task.ConfigureAwait(false);
+        var option = await task.ConfigureAwait(continueOnCapturedContext: false);
         var (isSome, some) = option;
         if (isSome)
         {
@@ -437,29 +437,29 @@ public static class Option
     /// Tap a <see cref="Option{T}"/> asynchronously.
     /// </summary>
     /// <param name="task"></param>
-    /// <param name="someFunc"></param>
-    /// <param name="noneFunc"></param>
+    /// <param name="someFuncAsync"></param>
+    /// <param name="noneFuncAsync"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Option<T>> TapAsync<T>(
         this Task<Option<T>> task,
-        Func<T, Task> someFunc,
-        Func<Task> noneFunc) where T : notnull
+        Func<T, Task> someFuncAsync,
+        Func<Task> noneFuncAsync) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
-        ArgumentNullException.ThrowIfNull(someFunc);
-        ArgumentNullException.ThrowIfNull(noneFunc);
+        ArgumentNullException.ThrowIfNull(someFuncAsync);
+        ArgumentNullException.ThrowIfNull(noneFuncAsync);
 
-        var option = await task.ConfigureAwait(false);
+        var option = await task.ConfigureAwait(continueOnCapturedContext: false);
         var (isSome, some) = option;
         if (isSome)
         {
-            await someFunc(some!).ConfigureAwait(false);
+            await someFuncAsync(some!).ConfigureAwait(continueOnCapturedContext: false);
         }
         else
         {
-            await noneFunc().ConfigureAwait(false);
+            await noneFuncAsync().ConfigureAwait(continueOnCapturedContext: false);
         }
 
         return option;
@@ -472,10 +472,154 @@ public static class Option
     /// <param name="value"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static bool Try<T>(this Option<T> option, [NotNullWhen(true)] out T? value) where T : notnull
+    public static bool TrySome<T>(this Option<T> option, [NotNullWhen(returnValue: true)] out T? value)
+        where T : notnull
     {
         var (isSome, some) = option;
         value = isSome ? some : default;
         return isSome;
+    }
+
+    /// <summary>
+    /// Maps the none value of a <see cref="Option{T}"/>.
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="mapNoneFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static Option<T> MapNone<T>(
+        this Option<T> option,
+        Func<Option<T>> mapNoneFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(mapNoneFunc);
+
+        return option.IsNone
+            ? mapNoneFunc()
+            : option;
+    }
+
+    /// <summary>
+    /// Maps the none value of a <see cref="Option{T}"/> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="mapNoneFunc"></param>
+    /// <typeparam name="TIn"></typeparam>
+    /// <returns></returns>
+    public static async Task<Option<TIn>> MapNoneAsync<TIn>(
+        this Task<Option<TIn>> task,
+        Func<Option<TIn>> mapNoneFunc)
+        where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(mapNoneFunc);
+
+        var option = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return option.IsNone
+            ? mapNoneFunc()
+            : option;
+    }
+
+    /// <summary>
+    /// Maps the none value of a <see cref="Option{T}"/> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="mapNoneFuncAsync"></param>
+    /// <typeparam name="TIn"></typeparam>
+    /// <returns></returns>
+    public static async Task<Option<TIn>> MapNoneAsync<TIn>(
+        this Task<Option<TIn>> task,
+        Func<Task<Option<TIn>>> mapNoneFuncAsync)
+        where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(mapNoneFuncAsync);
+
+        var option = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return option.IsNone
+            ? await mapNoneFuncAsync().ConfigureAwait(continueOnCapturedContext: false)
+            : option;
+    }
+
+    /// <summary>
+    /// Bind a <see cref="Option{T}"/>.
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="bindFunc"></param>
+    /// <param name="bindNoneFunc"></param>
+    /// <typeparam name="TIn"></typeparam>
+    /// <typeparam name="TOut"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static Option<TOut> Bind<TIn, TOut>(
+        this Option<TIn> option,
+        Func<TIn, Option<TOut>> bindFunc,
+        Func<Option<TOut>> bindNoneFunc)
+        where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(bindFunc);
+        ArgumentNullException.ThrowIfNull(bindNoneFunc);
+
+        var (isSome, some) = option;
+
+        return isSome
+            ? bindFunc(some!)
+            : bindNoneFunc();
+    }
+
+    /// <summary>
+    /// Bind a <see cref="Option{T}"/> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="bindFunc"></param>
+    /// <param name="bindNoneFunc"></param>
+    /// <typeparam name="TIn"></typeparam>
+    /// <typeparam name="TOut"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<Option<TOut>> BindAsync<TIn, TOut>(
+        this Task<Option<TIn>> task,
+        Func<TIn, Option<TOut>> bindFunc,
+        Func<Option<TOut>> bindNoneFunc)
+        where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(bindFunc);
+        ArgumentNullException.ThrowIfNull(bindNoneFunc);
+
+        var option = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isSome, some) = option;
+
+        return isSome
+            ? bindFunc(some!)
+            : bindNoneFunc();
+    }
+
+    /// <summary>
+    /// Bind a <see cref="Option{T}"/> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="bindFuncAsync"></param>
+    /// <param name="bindNoneFuncAsync"></param>
+    /// <typeparam name="TIn"></typeparam>
+    /// <typeparam name="TOut"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<Option<TOut>> BindAsync<TIn, TOut>(
+        this Task<Option<TIn>> task,
+        Func<TIn, Task<Option<TOut>>> bindFuncAsync,
+        Func<Task<Option<TOut>>> bindNoneFuncAsync)
+        where TIn : notnull where TOut : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(bindFuncAsync);
+        ArgumentNullException.ThrowIfNull(bindNoneFuncAsync);
+
+        var option = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isSome, some) = option;
+
+        return isSome
+            ? await bindFuncAsync(some!).ConfigureAwait(continueOnCapturedContext: false)
+            : await bindNoneFuncAsync().ConfigureAwait(continueOnCapturedContext: false);
     }
 }

@@ -18,7 +18,7 @@ public static class MonadExtensions
     /// <param name="errorFunc"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Result<T> ToResult<T>(this Option<T> option, Func<Error> errorFunc) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(errorFunc);
@@ -36,7 +36,7 @@ public static class MonadExtensions
     /// <param name="error"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Result<T> ToResult<T>(this Option<T> option, Error error) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(error);

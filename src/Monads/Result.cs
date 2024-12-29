@@ -7,6 +7,7 @@ namespace SleepingBear.Functional.Monads;
 /// Monad representing either a success or a failure.
 /// </summary>
 /// <typeparam name="T">The type of the lifted value.</typeparam>
+[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
 public readonly record struct Result<T> where T : notnull
 {
     private readonly T? _ok;
@@ -58,6 +59,26 @@ public readonly record struct Result<T> where T : notnull
         isOk = this.IsOk;
         ok = this._ok;
         error = this._error;
+    }
+
+    /// <summary>
+    /// Implicit operator for lifting a value to a <see cref="Result{T}"/>. 
+    /// </summary>
+    /// <param name="ok"></param>
+    /// <returns></returns>
+    public static implicit operator Result<T>(T ok)
+    {
+        return new Result<T>(ok);
+    }
+
+    /// <summary>
+    /// Implicit operator for lifting an <see cref="Error"/> to a <see cref="Result{T}"/>.
+    /// </summary>
+    /// <param name="error"></param>
+    /// <returns></returns>
+    public static implicit operator Result<T>(Error error)
+    {
+        return new Result<T>(error);
     }
 }
 

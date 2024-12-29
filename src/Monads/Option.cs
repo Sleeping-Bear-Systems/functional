@@ -7,6 +7,7 @@ namespace SleepingBear.Functional.Monads;
 /// </summary>
 /// <typeparam name="T">The type of the lifted value.</typeparam>
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+[SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
 public readonly record struct Option<T> where T : notnull
 {
     private readonly T? _some;
@@ -50,6 +51,16 @@ public readonly record struct Option<T> where T : notnull
     {
         isSome = this.IsSome;
         some = this._some;
+    }
+
+    /// <summary>
+    /// Implicit operator for lifting a value to a <see cref="Option{T}"/>.
+    /// </summary>
+    /// <param name="some"></param>
+    /// <returns></returns>
+    public static implicit operator Option<T>(T? some)
+    {
+        return some is null ? None : new Option<T>(some);
     }
 }
 

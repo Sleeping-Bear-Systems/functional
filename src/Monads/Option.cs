@@ -370,4 +370,98 @@ public static class Option
             ? await someFunc(some!).ConfigureAwait(false)
             : none;
     }
+
+    /// <summary>
+    /// Taps a <see cref="Option{T}"/>.
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="someAction"></param>
+    /// <param name="noneAction"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static Option<T> Tap<T>(
+        this Option<T> option,
+        Action<T> someAction,
+        Action noneAction) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(someAction);
+        ArgumentNullException.ThrowIfNull(noneAction);
+
+        var (isSome, some) = option;
+        if (isSome)
+        {
+            someAction(some!);
+        }
+        else
+        {
+            noneAction();
+        }
+
+        return option;
+    }
+
+    /// <summary>
+    /// Taps a <see cref="Option{T}"/> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="someAction"></param>
+    /// <param name="noneAction"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<Option<T>> TapAsync<T>(
+        this Task<Option<T>> task,
+        Action<T> someAction,
+        Action noneAction) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(someAction);
+        ArgumentNullException.ThrowIfNull(noneAction);
+
+        var option = await task.ConfigureAwait(false);
+        var (isSome, some) = option;
+        if (isSome)
+        {
+            someAction(some!);
+        }
+        else
+        {
+            noneAction();
+        }
+
+        return option;
+    }
+
+    /// <summary>
+    /// Tap a <see cref="Option{T}"/> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="someFunc"></param>
+    /// <param name="noneFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<Option<T>> TapAsync<T>(
+        this Task<Option<T>> task,
+        Func<T, Task> someFunc,
+        Func<Task> noneFunc) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(someFunc);
+        ArgumentNullException.ThrowIfNull(noneFunc);
+
+        var option = await task.ConfigureAwait(false);
+        var (isSome, some) = option;
+        if (isSome)
+        {
+            await someFunc(some!).ConfigureAwait(false);
+        }
+        else
+        {
+            await noneFunc().ConfigureAwait(false);
+        }
+
+        return option;
+    }
 }

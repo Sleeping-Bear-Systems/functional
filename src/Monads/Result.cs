@@ -328,4 +328,98 @@ public static class Result
             (false, _, var error) => await errorFunc(error!).ConfigureAwait(false)
         };
     }
+
+    /// <summary>
+    /// Taps a <see cref="Result{T}"/>.
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="okAction"></param>
+    /// <param name="errorAction"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static Result<T> Tap<T>(
+        this Result<T> result,
+        Action<T> okAction,
+        Action<Error> errorAction) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(okAction);
+        ArgumentNullException.ThrowIfNull(errorAction);
+
+        var (isOk, ok, error) = result;
+        if (isOk)
+        {
+            okAction(ok!);
+        }
+        else
+        {
+            errorAction(error!);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Tap a <see cref="Result{T}"/> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="okAction"></param>
+    /// <param name="errorAction"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<Result<T>> TapAsync<T>(
+        this Task<Result<T>> task,
+        Action<T> okAction,
+        Action<Error> errorAction) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(okAction);
+        ArgumentNullException.ThrowIfNull(errorAction);
+
+        var result = await task.ConfigureAwait(false);
+        var (isOk, ok, error) = result;
+        if (isOk)
+        {
+            okAction(ok!);
+        }
+        else
+        {
+            errorAction(error!);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Taps a <see cref="Result{T}"/> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="okFunc"></param>
+    /// <param name="errorFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
+    public static async Task<Result<T>> TapAsync<T>(
+        this Task<Result<T>> task,
+        Func<T, Task> okFunc,
+        Func<Error, Task> errorFunc) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(okFunc);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        var result = await task.ConfigureAwait(false);
+        var (isOk, ok, error) = result;
+        if (isOk)
+        {
+            await okFunc(ok!).ConfigureAwait(false);
+        }
+        else
+        {
+            await errorFunc(error!).ConfigureAwait(false);
+        }
+
+        return result;
+    }
 }

@@ -39,7 +39,7 @@ internal static class OptionTests
     {
         Assert.That(Option<string>.None.IsNone, Is.True);
     }
-    
+
     [Test]
     public static void ToOption_NotNull_ReturnsSome()
     {
@@ -101,5 +101,5 @@ internal static class OptionTests
             Assert.That(some, Is.EqualTo(0));
         });
     }
-    
+
 }

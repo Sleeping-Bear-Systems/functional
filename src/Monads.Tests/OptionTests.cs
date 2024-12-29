@@ -87,7 +87,7 @@ internal static class OptionTests
         {
             Assert.That(option.IsSome, Is.True);
             Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(1234));
+            Assert.That(some, Is.EqualTo(expected: 1234));
         });
     }
 
@@ -100,7 +100,7 @@ internal static class OptionTests
         {
             Assert.That(option.IsSome, Is.False);
             Assert.That(isSome, Is.False);
-            Assert.That(some, Is.EqualTo(0));
+            Assert.That(some, Is.EqualTo(expected: 0));
         });
     }
 
@@ -113,7 +113,7 @@ internal static class OptionTests
         {
             Assert.That(option.IsSome, Is.True);
             Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo("1234"));
+            Assert.That(some, Is.EqualTo(expected: "1234"));
         });
     }
 
@@ -133,7 +133,7 @@ internal static class OptionTests
         {
             Assert.That(option.IsSome, Is.True);
             Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo("1234"));
+            Assert.That(some, Is.EqualTo(expected: "1234"));
         });
     }
 

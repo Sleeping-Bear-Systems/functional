@@ -41,7 +41,7 @@ internal static class ResultTests
     [Test]
     public static void Ctor_Error_ReturnsError()
     {
-        var error = new GenericError<string>("error");
+        var error = new GenericError<string>(Value: "error");
         var result = new Result<string>(error);
         var (isOk, ok, resultError) = result;
         Assert.Multiple(() =>
@@ -55,10 +55,10 @@ internal static class ResultTests
     }
 
     [Test]
-    public static void ToResult_Ok_ReturnsOk()
+    public static void ToResultOk_ReturnsOk()
     {
         var value = new object();
-        var result = value.ToResult();
+        var result = value.ToResultOk();
         var (isOk, ok, error) = result;
         Assert.Multiple(() =>
         {
@@ -71,10 +71,10 @@ internal static class ResultTests
     }
 
     [Test]
-    public static void ToResult_Error_ReturnsError()
+    public static void ToResultError_ReturnsError()
     {
-        var error = new GenericError<string>("error");
-        var result = error.ToResult<string>();
+        var error = new GenericError<string>(Value: "error");
+        var result = error.ToResultError<string>();
         var (isOk, ok, resultError) = result;
         Assert.Multiple(() =>
         {
@@ -83,6 +83,30 @@ internal static class ResultTests
             Assert.That(isOk, Is.False);
             Assert.That(ok, Is.Null);
             Assert.That(resultError, Is.EqualTo(error));
+        });
+    }
+
+    [Test]
+    public static void ToResultError_Value_ReturnsGenericError()
+    {
+        var result = 1234.ToResultError<string, int>();
+        var (isOk, _, resultError) = result;
+        Assert.Multiple(() =>
+        {
+            Assert.That(isOk, Is.False);
+            Assert.That(resultError, Is.EqualTo(new GenericError<int>(Value: 1234)));
+        });
+    }
+
+    [Test]
+    public static void ToResultError_NoArguments_ReturnsUnknownError()
+    {
+        var result = Result.ToResultError<int>();
+        var (isOk, _, resultError) = result;
+        Assert.Multiple(() =>
+        {
+            Assert.That(isOk, Is.False);
+            Assert.That(resultError, Is.EqualTo(UnknownError.Value));
         });
     }
 }

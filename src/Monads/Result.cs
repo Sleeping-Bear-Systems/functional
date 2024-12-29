@@ -131,7 +131,7 @@ public static class Result
     {
         return new Result<T>(value.ToGenericError());
     }
-    
+
     /// <summary>
     /// Converts an exception to a <see cref="Result{T}"/>.
     /// </summary>

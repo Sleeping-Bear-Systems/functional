@@ -30,12 +30,12 @@ public readonly record struct Option<T> where T : notnull
     /// Flag indicating the monad contains a value.
     /// </summary>
     public bool IsSome { get; }
-    
+
     /// <summary>
     /// Flag indicating the monad does not contain a value.
     /// </summary>
     public bool IsNone => !this.IsSome;
-    
+
     /// <summary>
     /// None instance.
     /// </summary>

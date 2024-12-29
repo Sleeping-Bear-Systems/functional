@@ -18,7 +18,7 @@ internal static class OptionTests
             Assert.That(some, Is.Null);
         });
     }
-    
+
     [Test]
     public static void Ctor_Some_ReturnsSome()
     {

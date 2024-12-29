@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-// ReSharper disable UnusedMember.Global
-
 namespace SleepingBear.Functional.Monads;
 
 /// <summary>
@@ -59,6 +57,7 @@ public readonly record struct Option<T> where T : notnull
 /// Helper methods for <see cref="Option{T}"/>.
 /// </summary>
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class Option
 {
     /// <summary>

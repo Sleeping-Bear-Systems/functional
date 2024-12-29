@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.Functional.Err
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.Functional.Errors.Tests", "src\Errors.Tests\SleepingBear.Functional.Errors.Tests.csproj", "{081670EF-651D-441B-89BC-9DC4FC16149D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SleepingBear.Functional.Common", "src\Common\SleepingBear.Functional.Common.csproj", "{136B49CB-E250-4E0C-8AA5-D5FE87831C95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{081670EF-651D-441B-89BC-9DC4FC16149D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{081670EF-651D-441B-89BC-9DC4FC16149D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{081670EF-651D-441B-89BC-9DC4FC16149D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{136B49CB-E250-4E0C-8AA5-D5FE87831C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{136B49CB-E250-4E0C-8AA5-D5FE87831C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{136B49CB-E250-4E0C-8AA5-D5FE87831C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{136B49CB-E250-4E0C-8AA5-D5FE87831C95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B06DEA76-0E6F-47DE-98AF-D7DD8A49396A} = {F78E225E-D8A1-41B4-B819-12C17AD2C4A3}
@@ -61,5 +67,6 @@ Global
 		{E8A19506-C887-425A-BC78-4577AF1E51A8} = {F78E225E-D8A1-41B4-B819-12C17AD2C4A3}
 		{B60DB682-A21F-44BD-A628-7F114F1AD4FF} = {F78E225E-D8A1-41B4-B819-12C17AD2C4A3}
 		{081670EF-651D-441B-89BC-9DC4FC16149D} = {F78E225E-D8A1-41B4-B819-12C17AD2C4A3}
+		{136B49CB-E250-4E0C-8AA5-D5FE87831C95} = {F78E225E-D8A1-41B4-B819-12C17AD2C4A3}
 	EndGlobalSection
 EndGlobal

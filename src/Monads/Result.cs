@@ -144,10 +144,10 @@ public static class Result
     /// <typeparam name="TOut">The type of the output lifted value.</typeparam>
     /// <returns>A <see cref="Task{TResult}"/> containing <see cref="Result{TOut}"/>.</returns>
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public static async Task<Result<TOut>> Map<TIn, TOut>(this Task<Result<TIn>> task,
+    public static async Task<Result<TOut>> Map<TIn, TOut>(
+        this Task<Result<TIn>> task,
         Func<TIn, Task<TOut>> mapFuncAsync)
-        where TIn : notnull
-        where TOut : notnull
+        where TIn : notnull where TOut : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(mapFuncAsync);
@@ -190,7 +190,8 @@ public static class Result
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public static async Task<Result<TOut>> Bind<TIn, TOut>(this Task<Result<TIn>> task,
+    public static async Task<Result<TOut>> Bind<TIn, TOut>(
+        this Task<Result<TIn>> task,
         Func<TIn, Result<TOut>> bindFunc)
         where TIn : notnull where TOut : notnull
     {
@@ -214,7 +215,8 @@ public static class Result
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public static async Task<Result<TOut>> Bind<TIn, TOut>(this Task<Result<TIn>> task,
+    public static async Task<Result<TOut>> Bind<TIn, TOut>(
+        this Task<Result<TIn>> task,
         Func<TIn, Task<Result<TOut>>> bindFunc)
         where TIn : notnull where TOut : notnull
     {
@@ -228,7 +230,7 @@ public static class Result
             (false, _, var error) => error!.ToResult<TOut>()
         };
     }
-    
+
     /// <summary>
     /// Matches a <see cref="Result{TIn}"/> to a value.
     /// </summary>
@@ -251,7 +253,7 @@ public static class Result
             (false, _, var error) => errorFunc(error!)
         };
     }
-    
+
     /// <summary>
     /// Matches a <see cref="Result{TIn}"/> to a value asynchronously.
     /// </summary>
@@ -262,7 +264,8 @@ public static class Result
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public static async Task<TOut> MatchAsync<TIn, TOut>(this Task<Result<TIn>> task, Func<TIn, TOut> okFunc, Func<Error, TOut> errorFunc)
+    public static async Task<TOut> MatchAsync<TIn, TOut>(this Task<Result<TIn>> task, Func<TIn, TOut> okFunc,
+        Func<Error, TOut> errorFunc)
         where TIn : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
@@ -287,7 +290,10 @@ public static class Result
     /// <typeparam name="TOut"></typeparam>
     /// <returns></returns>
     [SuppressMessage("ReSharper", "NullableWarningSuppressionIsUsed")]
-    public static async Task<TOut> MatchAsync<TIn, TOut>(this Task<Result<TIn>> task, Func<TIn, Task<TOut>> okFunc, Func<Error, Task<TOut>> errorFunc)
+    public static async Task<TOut> MatchAsync<TIn, TOut>(
+        this Task<Result<TIn>> task,
+        Func<TIn, Task<TOut>> okFunc,
+        Func<Error, Task<TOut>> errorFunc)
         where TIn : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
@@ -301,5 +307,4 @@ public static class Result
             (false, _, var error) => await errorFunc(error!).ConfigureAwait(false)
         };
     }
-
 }

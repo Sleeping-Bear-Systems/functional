@@ -133,6 +133,17 @@ public static class Result
     }
 
     /// <summary>
+    /// Converts an exception to a <see cref="Result{T}"/>.
+    /// </summary>
+    /// <param name="ex">The exception being lifted.</param>
+    /// <typeparam name="T">The type of the value being lifted.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static Result<T> ToResultError<T>(this Exception ex) where T : notnull
+    {
+        return new ExceptionError(ex).ToResultError<T>();
+    }
+
+    /// <summary>
     /// Maps a <see cref="Result{TIn}"/> to a <see cref="Result{TOut}"/>.
     /// </summary>
     /// <param name="result">The result being mapped.</param>
@@ -619,5 +630,195 @@ public static class Result
             (true, var ok, _) => await bindFuncAsync(ok!).ConfigureAwait(continueOnCapturedContext: false),
             (false, _, var error) => await bindErrorFuncAsync(error!).ConfigureAwait(continueOnCapturedContext: false)
         };
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="value">The value being lifted.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <param name="errorFunc">The error function.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static Result<T> ToResultIf<T>(
+        this T value,
+        Func<T, bool> predicate,
+        Func<T, Error> errorFunc) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        return predicate(value)
+            ? new Result<T>(value)
+            : new Result<T>(errorFunc(value));
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing value being lifted.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <param name="errorFunc">The error function.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> ToResultIfAsync<T>(
+        this Task<T> task,
+        Func<T, bool> predicate,
+        Func<T, Error> errorFunc) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return predicate(value)
+            ? new Result<T>(value)
+            : new Result<T>(errorFunc(value));
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing value being lifted.</param>
+    /// <param name="predicateAsync">The predicate.</param>
+    /// <param name="errorFuncAsync">The error function.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> ToResultIfAsync<T>(
+        this Task<T> task,
+        Func<T, Task<bool>> predicateAsync,
+        Func<T, Task<Error>> errorFuncAsync) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicateAsync);
+        ArgumentNullException.ThrowIfNull(errorFuncAsync);
+
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return await predicateAsync(value).ConfigureAwait(continueOnCapturedContext: false)
+            ? new Result<T>(value)
+            : new Result<T>(await errorFuncAsync(value).ConfigureAwait(continueOnCapturedContext: false));
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="value">The value being lifted.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <param name="error">The error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static Result<T> ToResultIf<T>(
+        this T value,
+        Func<T, bool> predicate,
+        Error error) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(error);
+
+        return predicate(value)
+            ? new Result<T>(value)
+            : new Result<T>(error);
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing value being lifted.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <param name="error">The error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> ToResultIfAsync<T>(
+        this Task<T> task,
+        Func<T, bool> predicate,
+        Error error) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return predicate(value)
+            ? new Result<T>(value)
+            : new Result<T>(error);
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing value being lifted.</param>
+    /// <param name="predicateAsync">The predicate.</param>
+    /// <param name="error">The error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> ToResultIfAsync<T>(
+        this Task<T> task,
+        Func<T, Task<bool>> predicateAsync,
+        Error error) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicateAsync);
+
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return await predicateAsync(value).ConfigureAwait(continueOnCapturedContext: false)
+            ? new Result<T>(value)
+            : new Result<T>(error);
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="value">The value being lifted.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static Result<T> ToResultIf<T>(
+        this T value,
+        Func<T, bool> predicate) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return predicate(value)
+            ? new Result<T>(value)
+            : new Result<T>(UnknownError.Value);
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing value being lifted.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> ToResultIfAsync<T>(
+        this Task<T> task,
+        Func<T, bool> predicate) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return predicate(value)
+            ? new Result<T>(value)
+            : new Result<T>(UnknownError.Value);
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing value being lifted.</param>
+    /// <param name="predicateAsync">The predicate.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> ToResultIfAsync<T>(
+        this Task<T> task,
+        Func<T, Task<bool>> predicateAsync) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicateAsync);
+
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return await predicateAsync(value).ConfigureAwait(continueOnCapturedContext: false)
+            ? new Result<T>(value)
+            : new Result<T>(UnknownError.Value);
     }
 }

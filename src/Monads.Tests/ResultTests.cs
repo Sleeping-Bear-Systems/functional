@@ -109,4 +109,17 @@ internal static class ResultTests
             Assert.That(resultError, Is.EqualTo(UnknownError.Value));
         });
     }
+
+    [Test]
+    public static void ToResultError_Exception_ReturnExceptionError()
+    {
+        var ex = new InvalidOperationException();
+        var result = ex.ToResultError<string>();
+        var (isOk, _, resultError) = result;
+        Assert.Multiple(() =>
+        {
+            Assert.That(isOk, Is.False);
+            Assert.That(resultError, Is.EqualTo(new ExceptionError(ex)));
+        });
+    }
 }

@@ -763,4 +763,62 @@ public static class Result
             ? new Result<T>(value)
             : new Result<T>(error);
     }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="value">The value being lifted.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static Result<T> ToResultIf<T>(
+        this T value,
+        Func<T, bool> predicate) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return predicate(value)
+            ? new Result<T>(value)
+            : new Result<T>(UnknownError.Value);
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing value being lifted.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> ToResultIfAsync<T>(
+        this Task<T> task,
+        Func<T, bool> predicate) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return predicate(value)
+            ? new Result<T>(value)
+            : new Result<T>(UnknownError.Value);
+    }
+
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing value being lifted.</param>
+    /// <param name="predicateAsync">The predicate.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> ToResultIfAsync<T>(
+        this Task<T> task,
+        Func<T, Task<bool>> predicateAsync) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicateAsync);
+
+        var value = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return await predicateAsync(value).ConfigureAwait(continueOnCapturedContext: false)
+            ? new Result<T>(value)
+            : new Result<T>(UnknownError.Value);
+    }
 }

@@ -234,6 +234,20 @@ public static class Option
     /// Matches a <see cref="Option{T}"/>.
     /// </summary>
     /// <param name="option"></param>
+    /// <param name="noneValue"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static T Match<T>(this Option<T> option, T noneValue) where T : notnull
+    {
+        var (isSome, some) = option;
+        return isSome ? some! : noneValue;
+    }
+
+    /// <summary>
+    /// Matches a <see cref="Option{T}"/>.
+    /// </summary>
+    /// <param name="option"></param>
     /// <param name="someFunc"></param>
     /// <param name="noneFunc"></param>
     /// <typeparam name="TIn"></typeparam>

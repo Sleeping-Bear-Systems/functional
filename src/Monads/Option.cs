@@ -245,6 +245,22 @@ public static class Option
     }
 
     /// <summary>
+    /// Matches a <see cref="Option{T}"/> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="noneValue"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<T> MatchAsync<T>(this Task<Option<T>> task, T noneValue) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+
+        var (isSome, some) = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return isSome ? some! : noneValue;
+    }
+
+    /// <summary>
     /// Matches a <see cref="Option{T}"/>.
     /// </summary>
     /// <param name="option"></param>

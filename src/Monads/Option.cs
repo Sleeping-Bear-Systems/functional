@@ -622,4 +622,108 @@ public static class Option
             ? await bindFuncAsync(some!).ConfigureAwait(continueOnCapturedContext: false)
             : await bindNoneFuncAsync().ConfigureAwait(continueOnCapturedContext: false);
     }
+
+    /// <summary>
+    /// Matches a <see cref="Option{T}"/> or throws an exception.
+    /// </summary>
+    /// <param name="option">The <see cref="Option{T}"/> being matched.</param>
+    /// <param name="noneFunc">The none function.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>The lifted value.</returns>
+    /// <exception cref="Exception">Thrown if the <see cref="Option{T}"/> is none.</exception>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static T MatchOrThrow<T>(
+        this Option<T> option,
+        Func<Exception> noneFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(noneFunc);
+
+        var (isSome, some) = option;
+        return isSome
+            ? some!
+            : throw noneFunc();
+    }
+
+    /// <summary>
+    /// Matches a <see cref="Option{T}"/> or throws an exception.
+    /// </summary>
+    /// <param name="option">The <see cref="Option{T}"/> being matched.</param>
+    /// <param name="someFunc">The matching function.</param>
+    /// <param name="noneFunc">The none function.</param>
+    /// <typeparam name="TIn">The type of the lifted value.</typeparam>
+    /// <typeparam name="TOut">The output type.</typeparam>
+    /// <returns>The lifted value.</returns>
+    /// <exception cref="Exception">Thrown if the <see cref="Option{T}"/> is none.</exception>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static TOut MatchOrThrow<TIn, TOut>(
+        this Option<TIn> option,
+        Func<TIn, TOut> someFunc,
+        Func<Exception> noneFunc)
+        where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(someFunc);
+        ArgumentNullException.ThrowIfNull(noneFunc);
+
+        var (isSome, some) = option;
+        return isSome
+            ? someFunc(some!)
+            : throw noneFunc();
+    }
+
+    /// <summary>
+    /// Matches a <see cref="Option{TIn}"/> or throws an exception.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing <see cref="Option{TIn}"/> being matched.</param>
+    /// <param name="someFunc">The matching function.</param>
+    /// <param name="noneFunc">The none function.</param>
+    /// <typeparam name="TIn">The type of the lifted value.</typeparam>
+    /// <typeparam name="TOut">The output type.</typeparam>
+    /// <returns>The lifted value.</returns>
+    /// <exception cref="Exception">Thrown if the <see cref="Option{TIn}"/> is none.</exception>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<TOut> MatchOrThrowAsync<TIn, TOut>(
+        this Task<Option<TIn>> task,
+        Func<TIn, TOut> someFunc,
+        Func<Exception> noneFunc)
+        where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(someFunc);
+        ArgumentNullException.ThrowIfNull(noneFunc);
+
+        var option = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isSome, some) = option;
+        return isSome
+            ? someFunc(some!)
+            : throw noneFunc();
+    }
+
+    /// <summary>
+    /// Matches a <see cref="Option{TIn}"/> or throws an exception.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing <see cref="Option{TIn}"/> being matched.</param>
+    /// <param name="someFuncAsync">The matching function.</param>
+    /// <param name="noneFuncAsync">The none function.</param>
+    /// <typeparam name="TIn">The type of the lifted value.</typeparam>
+    /// <typeparam name="TOut">The output type.</typeparam>
+    /// <returns>The lifted value.</returns>
+    /// <exception cref="Exception">Thrown if the <see cref="Option{TIn}"/> is none.</exception>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<TOut> MatchOrThrowAsync<TIn, TOut>(
+        this Task<Option<TIn>> task,
+        Func<TIn, Task<TOut>> someFuncAsync,
+        Func<Task<Exception>> noneFuncAsync)
+        where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(someFuncAsync);
+        ArgumentNullException.ThrowIfNull(noneFuncAsync);
+
+        var option = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isSome, some) = option;
+        return isSome
+            ? await someFuncAsync(some!).ConfigureAwait(continueOnCapturedContext: false)
+            : throw await noneFuncAsync().ConfigureAwait(continueOnCapturedContext: false);
+    }
 }

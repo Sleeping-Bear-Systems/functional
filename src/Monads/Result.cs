@@ -821,4 +821,102 @@ public static class Result
             ? new Result<T>(value)
             : new Result<T>(UnknownError.Value);
     }
+
+    /// <summary>
+    /// Matches a <see cref="Result{T}"/> or throws an exception.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}"/> being matched.</param>
+    /// <param name="exceptionFunc">The function generating an exception from the error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>The lifted value.</returns>
+    /// <exception cref="Exception">Thrown if the result is error.</exception>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static T MatchOrThrow<T>(
+        this Result<T> result,
+        Func<Error, Exception> exceptionFunc) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(exceptionFunc);
+
+        var (isOk, ok, error) = result;
+        return isOk
+            ? ok!
+            : throw exceptionFunc(error!);
+    }
+
+    /// <summary>
+    /// Matches a <see cref="Result{T}"/> or throws an exception.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}"/> being matched.</param>
+    /// <param name="okFunc">The match function.</param>
+    /// <param name="errorFunc">The function generating an exception from the error.</param>
+    /// <typeparam name="TIn">The type of the lifted value.</typeparam>
+    /// <typeparam name="TOut">The matched type.</typeparam>
+    /// <returns>The lifted value.</returns>
+    /// <exception cref="Exception">Thrown if the result is error.</exception>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static TOut MatchOrThrow<TIn, TOut>(
+        this Result<TIn> result,
+        Func<TIn, TOut> okFunc,
+        Func<Error, Exception> errorFunc) where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(okFunc);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        var (isOk, ok, error) = result;
+        return isOk
+            ? okFunc(ok!)
+            : throw errorFunc(error!);
+    }
+
+    /// <summary>
+    /// Matches a <see cref="Result{T}"/> or throws an exception.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containined the <see cref="Result{T}"/> being matched.</param>
+    /// <param name="okFunc">The match function.</param>
+    /// <param name="errorFunc">The function generating an exception from the error.</param>
+    /// <typeparam name="TIn">The type of the lifted value.</typeparam>
+    /// <typeparam name="TOut">The matched type.</typeparam>
+    /// <returns>The lifted value.</returns>
+    /// <exception cref="Exception">Thrown if the result is error.</exception>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<TOut> MatchOrThrowAsync<TIn, TOut>(
+        this Task<Result<TIn>> task,
+        Func<TIn, TOut> okFunc,
+        Func<Error, Exception> errorFunc) where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(okFunc);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        var (isOk, ok, error) = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return isOk
+            ? okFunc(ok!)
+            : throw errorFunc(error!);
+    }
+
+    /// <summary>
+    /// Matches a <see cref="Result{T}"/> or throws an exception.
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containined the <see cref="Result{T}"/> being matched.</param>
+    /// <param name="okFuncAsync">The match function.</param>
+    /// <param name="errorFuncAsync">The function generating an exception from the error.</param>
+    /// <typeparam name="TIn">The type of the lifted value.</typeparam>
+    /// <typeparam name="TOut">The matched type.</typeparam>
+    /// <returns>The lifted value.</returns>
+    /// <exception cref="Exception">Thrown if the result is error.</exception>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<TOut> MatchOrThrowAsync<TIn, TOut>(
+        this Task<Result<TIn>> task,
+        Func<TIn, Task<TOut>> okFuncAsync,
+        Func<Error, Task<Exception>> errorFuncAsync) where TIn : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(okFuncAsync);
+        ArgumentNullException.ThrowIfNull(errorFuncAsync);
+
+        var (isOk, ok, error) = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return isOk
+            ? await okFuncAsync(ok!).ConfigureAwait(continueOnCapturedContext: false)
+            : throw await errorFuncAsync(error!).ConfigureAwait(continueOnCapturedContext: false);
+    }
 }

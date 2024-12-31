@@ -41,7 +41,7 @@ internal static class ResultTests
     [Test]
     public static void Ctor_Error_ReturnsError()
     {
-        var error = new GenericError<string>(Value: "error");
+        var error = new ValueError<string>(Value: "error");
         var result = new Result<string>(error);
         var (isOk, ok, resultError) = result;
         Assert.Multiple(() =>
@@ -73,7 +73,7 @@ internal static class ResultTests
     [Test]
     public static void ToResultError_ReturnsError()
     {
-        var error = new GenericError<string>(Value: "error");
+        var error = new ValueError<string>(Value: "error");
         var result = error.ToResultError<string>();
         var (isOk, ok, resultError) = result;
         Assert.Multiple(() =>
@@ -87,14 +87,14 @@ internal static class ResultTests
     }
 
     [Test]
-    public static void ToResultError_Value_ReturnsGenericError()
+    public static void ToResultError_Value_ReturnsValueError()
     {
         var result = 1234.ToResultError<string, int>();
         var (isOk, _, resultError) = result;
         Assert.Multiple(() =>
         {
             Assert.That(isOk, Is.False);
-            Assert.That(resultError, Is.EqualTo(new GenericError<int>(Value: 1234)));
+            Assert.That(resultError, Is.EqualTo(new ValueError<int>(Value: 1234)));
         });
     }
 

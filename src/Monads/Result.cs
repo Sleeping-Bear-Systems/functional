@@ -121,7 +121,7 @@ public static class Result
     }
 
     /// <summary>
-    /// Lifts a value to <see cref="GenericError{T}"/> and then to a <see cref="Result{T}"/>.
+    /// Lifts a value to <see cref="ValueError{T}"/> and then to a <see cref="Result{T}"/>.
     /// </summary>
     /// <param name="value">The error value being lifted.</param>
     /// <typeparam name="T">The type of the lifted value.</typeparam>
@@ -129,7 +129,7 @@ public static class Result
     /// <returns>A <see cref="Result{T}"/>.</returns>
     public static Result<T> ToResultError<T, TError>(this TError value) where T : notnull where TError : notnull
     {
-        return new Result<T>(value.ToGenericError());
+        return new Result<T>(value.ToValueError());
     }
 
     /// <summary>

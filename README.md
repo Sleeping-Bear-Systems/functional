@@ -1,13 +1,10 @@
-# sleepingbear-monad
+# SleepingBear.Functional
 
-This collection of class libraries providing monad implementations and error handling for functional programming in C#.
+This collection of .NET Core projects providing monad implementations and error handling for functional 
+programming in C#.
 
-## SleepingBear.Monad.Core
+## SleepingBear.Functional.Common
 
-## SleepingBear.Monad.Monads
+## SleepingBear.Functional.Errors
 
-## SleepingBear.Monad.Errors
-
-## SleepingBear.Monad.Partials
-
-## Sleeping.Monad.Tasks
+## SleepingBear.Functional.Monads

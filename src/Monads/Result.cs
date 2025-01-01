@@ -636,6 +636,43 @@ public static class Result
     /// Lifts a value to a <see cref="Result{T}"/> conditionally.
     /// </summary>
     /// <param name="value">The value being lifted.</param>
+    /// <param name="flag">The flag indicating the value is OK.</param>
+    /// <param name="error">The <see cref="Error"/>.</param>
+    /// <typeparam name="T">The type of the lifed value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/> containing the value.</returns>
+    public static Result<T> ToResultIf<T>(
+        this T value,
+        bool flag,
+        Error error) where T : notnull
+    {
+        return flag
+            ? new Result<T>(value)
+            : new Result<T>(error);
+    }
+    
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally and asynchronously..
+    /// </summary>
+    /// <param name="task">The <see cref="Task{TResult}"/> containing the value.</param>
+    /// <param name="flag">The flag indicating the value is OK.</param>
+    /// <param name="error">The <see cref="Error"/>.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Task{TResult}"/> containing the <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> ToResultIfAsync<T>(
+        this Task<T> task,
+        bool flag,
+        Error error) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        return flag
+            ? new Result<T>(await task.ConfigureAwait(continueOnCapturedContext: false))
+            : new Result<T>(error);
+    }
+    
+    /// <summary>
+    /// Lifts a value to a <see cref="Result{T}"/> conditionally.
+    /// </summary>
+    /// <param name="value">The value being lifted.</param>
     /// <param name="predicate">The predicate.</param>
     /// <param name="errorFunc">The error function.</param>
     /// <typeparam name="T">The type of the lifted value.</typeparam>

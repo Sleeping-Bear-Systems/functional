@@ -1,25 +1,40 @@
-﻿using SleepingBear.Functional.Errors;
+﻿using System.Globalization;
+using SleepingBear.Functional.Errors;
+using TestResult = SleepingBear.Functional.Testing.TestResult;
 
 namespace SleepingBear.Functional.Monads.Tests;
 
 /// <summary>
-/// Tests for <see cref="Result{T}"/>.
+///     Tests for <see cref="Result{T}" />.
 /// </summary>
 internal static class ResultTests
 {
     [Test]
-    public static void DefaultCtor_ReturnFailure()
+    public static void Bind_Error_ValidatesBehavior()
     {
-        var result = new Result<object>();
-        var (isOk, ok, error) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.False);
-            Assert.That(result.IsError, Is.True);
-            Assert.That(isOk, Is.False);
-            Assert.That(ok, Is.Null);
-            Assert.That(error, Is.InstanceOf<UnknownError>());
-        });
+        var error = "error".ToValueError();
+        var result = error
+            .ToResultError<int>()
+            .Bind(ok => ok.ToString(CultureInfo.InvariantCulture).ToResultOk());
+        TestResult.IsErrorEqualTo(result, error);
+    }
+
+    [Test]
+    public static void Bind_Ok_ValidatesBehavior()
+    {
+        var result = 1234
+            .ToResultOk()
+            .Bind(ok => ok.ToString(CultureInfo.InvariantCulture).ToResultOk());
+        TestResult.IsOkEqualTo(result, expected: "1234");
+    }
+
+    [Test]
+    public static void Ctor_Error_ReturnsError()
+    {
+        var error = "error".ToValueError();
+        var result = new Result<string>(error);
+        TestResult.IsErrorEqualTo(result, error);
+        Assert.That(result.IsError, Is.True);
     }
 
     [Test]
@@ -27,87 +42,31 @@ internal static class ResultTests
     {
         var value = new object();
         var result = new Result<object>(value);
-        var (isOk, ok, error) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.True);
-            Assert.That(result.IsError, Is.False);
-            Assert.That(isOk, Is.True);
-            Assert.That(ok, Is.EqualTo(value));
-            Assert.That(error, Is.Null);
-        });
+        TestResult.IsOkSameAs(result, value);
+        Assert.That(result.IsError, Is.False);
     }
 
     [Test]
-    public static void Ctor_Error_ReturnsError()
+    public static void DefaultCtor_ReturnFailure()
     {
-        var error = new ValueError<string>(Value: "error");
-        var result = new Result<string>(error);
-        var (isOk, ok, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.False);
-            Assert.That(result.IsError, Is.True);
-            Assert.That(isOk, Is.False);
-            Assert.That(ok, Is.Null);
-            Assert.That(resultError, Is.EqualTo(error));
-        });
+        var result = new Result<object>();
+        TestResult.IsError<object, UnknownError>(result);
+        Assert.That(result.IsError, Is.True);
     }
 
     [Test]
-    public static void ToResultOk_ReturnsOk()
+    public static void ImplicitOperatorError_ReturnsError()
     {
-        var value = new object();
-        var result = value.ToResultOk();
-        var (isOk, ok, error) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.True);
-            Assert.That(result.IsError, Is.False);
-            Assert.That(isOk, Is.True);
-            Assert.That(ok, Is.EqualTo(value));
-            Assert.That(error, Is.Null);
-        });
+        var error = "error".ToValueError();
+        Result<string> result = error;
+        TestResult.IsErrorEqualTo(result, error);
     }
 
     [Test]
-    public static void ToResultError_ReturnsError()
+    public static void ImplicitOperatorOk_ReturnsOk()
     {
-        var error = new ValueError<string>(Value: "error");
-        var result = error.ToResultError<string>();
-        var (isOk, ok, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.False);
-            Assert.That(result.IsError, Is.True);
-            Assert.That(isOk, Is.False);
-            Assert.That(ok, Is.Null);
-            Assert.That(resultError, Is.EqualTo(error));
-        });
-    }
-
-    [Test]
-    public static void ToResultError_Value_ReturnsValueError()
-    {
-        var result = 1234.ToResultError<string, int>();
-        var (isOk, _, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.False);
-            Assert.That(resultError, Is.EqualTo(new ValueError<int>(Value: 1234)));
-        });
-    }
-
-    [Test]
-    public static void ToResultError_NoArguments_ReturnsUnknownError()
-    {
-        var result = Result.ToResultError<int>();
-        var (isOk, _, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.False);
-            Assert.That(resultError, Is.EqualTo(UnknownError.Value));
-        });
+        Result<int> result = 1234;
+        TestResult.IsOkEqualTo(result, expected: 1234);
     }
 
     [Test]
@@ -115,11 +74,36 @@ internal static class ResultTests
     {
         var ex = new InvalidOperationException();
         var result = ex.ToResultError<string>();
-        var (isOk, _, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.False);
-            Assert.That(resultError, Is.EqualTo(new ExceptionError(ex)));
-        });
+        TestResult.IsErrorEqualTo(result, ex.ToExceptionError());
+    }
+
+    [Test]
+    public static void ToResultError_NoArguments_ReturnsUnknownError()
+    {
+        var result = Result.ToResultError<int>();
+        TestResult.IsError<int, UnknownError>(result);
+    }
+
+    [Test]
+    public static void ToResultError_ReturnsError()
+    {
+        var error = "error".ToValueError();
+        var result = error.ToResultError<string>();
+        TestResult.IsErrorEqualTo(result, error);
+    }
+
+    [Test]
+    public static void ToResultError_Value_ReturnsValueError()
+    {
+        var result = 1234.ToResultError<string, int>();
+        TestResult.IsErrorEqualTo(result, 1234.ToValueError());
+    }
+
+    [Test]
+    public static void ToResultOk_ReturnsOk()
+    {
+        var value = new object();
+        var result = value.ToResultOk();
+        TestResult.IsOkSameAs(result, value);
     }
 }

@@ -4,12 +4,12 @@
 namespace SleepingBear.Functional.Common;
 
 /// <summary>
-/// Extensions methods for piping.
+///     Extensions methods for piping.
 /// </summary>
 public static class PipeExtensions
 {
     /// <summary>
-    /// Pipes a value.
+    ///     Pipes a value.
     /// </summary>
     /// <param name="value"></param>
     /// <param name="func"></param>
@@ -24,7 +24,7 @@ public static class PipeExtensions
     }
 
     /// <summary>
-    /// Pipes a value asynchronously.
+    ///     Pipes a value asynchronously.
     /// </summary>
     /// <param name="task"></param>
     /// <param name="func"></param>
@@ -41,7 +41,7 @@ public static class PipeExtensions
     }
 
     /// <summary>
-    /// Pipes a value asynchronously.
+    ///     Pipes a value asynchronously.
     /// </summary>
     /// <param name="task"></param>
     /// <param name="func"></param>
@@ -58,7 +58,19 @@ public static class PipeExtensions
     }
 
     /// <summary>
-    /// Taps a value.
+    ///     Executes a pipe function if the function is not null.
+    /// </summary>
+    /// <param name="value">The value being piped.</param>
+    /// <param name="func">The pipe function. (optional)</param>
+    /// <typeparam name="TIn">The type of the piped value.</typeparam>
+    /// <returns>The piped value if the pipe function is null or the result of the pipe function otherwise.</returns>
+    public static TIn PipeIfNotNull<TIn>(this TIn value, Func<TIn, TIn>? func)
+    {
+        return func is null ? value : func(value);
+    }
+
+    /// <summary>
+    ///     Taps a value.
     /// </summary>
     /// <param name="value"></param>
     /// <param name="action"></param>
@@ -73,7 +85,7 @@ public static class PipeExtensions
     }
 
     /// <summary>
-    /// Taps a value asynchronously.
+    ///     Taps a value asynchronously.
     /// </summary>
     /// <param name="task"></param>
     /// <param name="action"></param>
@@ -90,7 +102,7 @@ public static class PipeExtensions
     }
 
     /// <summary>
-    /// Taps a value asynchronously.
+    ///     Taps a value asynchronously.
     /// </summary>
     /// <param name="task"></param>
     /// <param name="func"></param>
@@ -104,17 +116,5 @@ public static class PipeExtensions
         var value = await task.ConfigureAwait(continueOnCapturedContext: false);
         await func(value).ConfigureAwait(continueOnCapturedContext: false);
         return value;
-    }
-
-    /// <summary>
-    /// Executes a pipe function if the function is not null.
-    /// </summary>
-    /// <param name="value">The value being piped.</param>
-    /// <param name="func">The pipe function. (optional)</param>
-    /// <typeparam name="TIn">The type of the piped value.</typeparam>
-    /// <returns>The piped value if the pipe function is null or the result of the pipe function otherwise.</returns>
-    public static TIn PipeIfNotNull<TIn>(this TIn value, Func<TIn, TIn>? func)
-    {
-        return func is null ? value : func(value);
     }
 }

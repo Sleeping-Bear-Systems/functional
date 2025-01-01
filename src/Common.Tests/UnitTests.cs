@@ -1,7 +1,7 @@
 ﻿namespace SleepingBear.Functional.Common.Tests;
 
 /// <summary>
-/// Tests for <see cref="Unit"/>.
+///     Tests for <see cref="Unit" />.
 /// </summary>
 internal static class UnitTests
 {

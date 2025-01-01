@@ -23,7 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\SleepingBear.Functional.Common.csproj"/>
+        <ProjectReference Include="..\Validation\SleepingBear.Functional.Validation.csproj"/>
     </ItemGroup>
-
 </Project>

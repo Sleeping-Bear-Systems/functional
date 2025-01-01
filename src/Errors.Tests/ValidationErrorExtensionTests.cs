@@ -1,7 +1,7 @@
 ﻿namespace SleepingBear.Functional.Errors.Tests;
 
 /// <summary>
-/// Tests for <see cref="ValidationErrorExtensions"/>.
+///     Tests for <see cref="ValidationErrorExtensions" />.
 /// </summary>
 internal static class ValidationErrorExtensionTests
 {

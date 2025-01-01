@@ -1,24 +1,47 @@
 ﻿using System.Globalization;
+using SleepingBear.Functional.Testing;
 
 namespace SleepingBear.Functional.Monads.Tests;
 
 /// <summary>
-/// Test for <see cref="Option{T}"/>.
+///     Test for <see cref="Option{T}" />.
 /// </summary>
 internal static class OptionTests
 {
     [Test]
-    public static void DefaultCtor_ReturnsNone()
+    public static void Bind_None_CallsNoneFunction()
     {
-        var option = new Option<object>();
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.False);
-            Assert.That(option.IsNone, Is.True);
-            Assert.That(isSome, Is.False);
-            Assert.That(some, Is.Null);
-        });
+        var option = Option<string>
+            .None
+            .Bind(
+                some => some.ToString(CultureInfo.InvariantCulture),
+                () => "none".ToOption());
+        TestOption.IsSomeEqualTo(option, expected: "none");
+    }
+
+    [Test]
+    public static void Bind_None_ReturnsNone()
+    {
+        var option = Option<int>.None.Bind(x => x.ToString(CultureInfo.InvariantCulture).ToOption());
+        TestOption.IsNone(option);
+    }
+
+    [Test]
+    public static void Bind_Some_CallsSomeFunction()
+    {
+        var option = 1234
+            .ToOption()
+            .Bind(
+                some => some.ToString(CultureInfo.InvariantCulture),
+                () => Option<string>.None);
+        TestOption.IsSomeEqualTo(option, expected: "1234");
+    }
+
+    [Test]
+    public static void Bind_Some_ReturnsSome()
+    {
+        var option = 1234.ToOption().Bind(x => x.ToString(CultureInfo.InvariantCulture).ToOption());
+        TestOption.IsSomeEqualTo(option, expected: "1234");
     }
 
     [Test]
@@ -26,39 +49,136 @@ internal static class OptionTests
     {
         var value = new object();
         var option = new Option<object>(value);
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(option.IsNone, Is.False);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(value));
-        });
+        TestOption.IsSomeSameAs(option, value);
     }
 
     [Test]
-    public static void None_ValidatesBehavior()
+    public static void DefaultCtor_ReturnsNone()
     {
-        Assert.That(Option<string>.None.IsNone, Is.True);
-    }
-
-    [Test]
-    public static void ImplicitOperator_Null_ReturnsNone()
-    {
-        Option<string> option = null;
-        Assert.That(option.IsNone);
+        var option = new Option<object>();
+        TestOption.IsNone(option);
     }
 
     [Test]
     public static void ImplicitOperator_NotNull_ReturnsSome()
     {
         Option<string> option = "test";
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(expected: "test"));
-        });
+        TestOption.IsSomeEqualTo(option, expected: "test");
+    }
+
+    [Test]
+    public static void ImplicitOperator_Null_ReturnsNone()
+    {
+        Option<string> option = null;
+        TestOption.IsNone(option);
+    }
+
+    [Test]
+    public static void Map_None_ReturnsNone()
+    {
+        var option = Option<int>.None.Map(x => x.ToString(CultureInfo.InvariantCulture));
+        TestOption.IsNone(option);
+    }
+
+    [Test]
+    public static void Map_Some_ReturnsSome()
+    {
+        var option = 1234.ToOption().Map(x => x.ToString(CultureInfo.InvariantCulture));
+        TestOption.IsSomeEqualTo(option, expected: "1234");
+    }
+
+    [Test]
+    public static void MapNone_None_ReturnsOption()
+    {
+        var option = Option<int>.None.MapNone(() => 1234.ToOption());
+        TestOption.IsSomeEqualTo(option, expected: 1234);
+    }
+
+    [Test]
+    public static void Match_NoneFuncWithNone_ReturnsSome()
+    {
+        var match = Option<int>
+            .None
+            .Match(
+                some => some.ToString(CultureInfo.InvariantCulture),
+                () => "none");
+        Assert.That(match, Is.EqualTo(expected: "none"));
+    }
+
+    [Test]
+    public static void Match_NoneFuncWithSome_ReturnsSome()
+    {
+        var match = 1234
+            .ToOption()
+            .Match(
+                some => some.ToString(CultureInfo.InvariantCulture),
+                () => "none");
+        Assert.That(match, Is.EqualTo(expected: "1234"));
+    }
+
+    [Test]
+    public static void Match_NoneValueWithNone_ReturnsNoneValue()
+    {
+        var match = Option<int>.None.Match(noneValue: -1);
+        Assert.That(match, Is.EqualTo(expected: -1));
+    }
+
+    [Test]
+    public static void Match_NoneValueWithSome_ReturnsSome()
+    {
+        var match = 1234.ToOption().Match(noneValue: -1);
+        Assert.That(match, Is.EqualTo(expected: 1234));
+    }
+
+    [Test]
+    public static void Match_SomeFuncNoneValueWithNone_ReturnsNoneValue()
+    {
+        var match = Option<int>
+            .None
+            .Match(some => some.ToString(CultureInfo.InvariantCulture), none: "none");
+        Assert.That(match, Is.EqualTo(expected: "none"));
+    }
+
+    [Test]
+    public static void Match_SomeFuncNoneValueWithSome_ReturnsSomeFunc()
+    {
+        var match = 1234
+            .ToOption()
+            .Match(some => some.ToString(CultureInfo.InvariantCulture), none: "none");
+        Assert.That(match, Is.EqualTo(expected: "1234"));
+    }
+
+    [Test]
+    public static void None_ValidatesBehavior()
+    {
+        TestOption.IsNone(Option<object>.None);
+    }
+
+    [Test]
+    public static void Tap_None_NoneActionCalled()
+    {
+        var actionCalled = false;
+        _ = Option<int>.None
+            .Tap(
+                _ => { Assert.Fail(); },
+                () => { actionCalled = true; });
+        Assert.That(actionCalled, Is.True);
+    }
+
+    [Test]
+    public static void Tap_Some_CallSomeAction()
+    {
+        var actionCalled = false;
+        _ = 1234
+            .ToOption()
+            .Tap(
+                some =>
+                {
+                    actionCalled = true;
+                    Assert.That(some, Is.EqualTo(expected: 1234));
+                },
+                Assert.Fail);
+        Assert.That(actionCalled, Is.True);
     }
 
     [Test]
@@ -66,100 +186,58 @@ internal static class OptionTests
     {
         var value = new object();
         var option = value.ToOption();
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(option.IsNone, Is.False);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(value));
-        });
+        TestOption.IsSomeSameAs(option, value);
     }
 
     [Test]
     public static void ToOption_Null_ReturnsNone()
     {
         var option = default(object).ToOption();
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.False);
-            Assert.That(option.IsNone, Is.True);
-            Assert.That(isSome, Is.False);
-            Assert.That(some, Is.Null);
-        });
+        TestOption.IsNone(option);
     }
 
     [Test]
-    public static void ToOption_PredicateWithNull_ReturnsNone()
+    public static void ToOption_PredicateFalse_ReturnsNone()
     {
-        var option = default(object).ToOption(_ => true);
-        Assert.That(option.IsNone, Is.True);
+        var option = 1234.ToOption(_ => false);
+        TestOption.IsNone(option);
     }
 
     [Test]
     public static void ToOption_PredicateTrue_ReturnsSome()
     {
         var option = 1234.ToOption(_ => true);
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(expected: 1234));
-        });
+        TestOption.IsSomeEqualTo(option, expected: 1234);
     }
 
     [Test]
-    public static void ToOption_PredicateFalse_ReturnsSome()
+    public static void ToOption_PredicateWithNull_ReturnsNone()
     {
-        var option = 1234.ToOption(_ => false);
-        var (isSome, some) = option;
+        var option = default(object).ToOption(_ => true);
+        TestOption.IsNone(option);
+    }
+
+    [Test]
+    public static void TrySome_None_ValidatesBehavior()
+    {
+        var option = Option<int>.None;
+        var result = option.TrySome(out var some);
         Assert.Multiple(() =>
         {
-            Assert.That(option.IsSome, Is.False);
-            Assert.That(isSome, Is.False);
+            Assert.That(result, Is.False);
             Assert.That(some, Is.EqualTo(expected: 0));
         });
     }
 
     [Test]
-    public static void Map_Some_ReturnsSome()
+    public static void TrySome_Some_ValidatesBehavior()
     {
-        var option = 1234.ToOption().Map(x => x.ToString(CultureInfo.InvariantCulture));
-        var (isSome, some) = option;
+        var option = 1234.ToOption();
+        var result = option.TrySome(out var some);
         Assert.Multiple(() =>
         {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(expected: "1234"));
+            Assert.That(result, Is.True);
+            Assert.That(some, Is.EqualTo(expected: 1234));
         });
-    }
-
-    [Test]
-    public static void Map_None_ReturnsNone()
-    {
-        var option = Option<int>.None.Map(x => x.ToString(CultureInfo.InvariantCulture));
-        Assert.That(option.IsNone, Is.True);
-    }
-
-    [Test]
-    public static void Bind_Some_ReturnsSome()
-    {
-        var option = 1234.ToOption().Bind(x => x.ToString(CultureInfo.InvariantCulture).ToOption());
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(expected: "1234"));
-        });
-    }
-
-    [Test]
-    public static void Bind_None_ReturnsNone()
-    {
-        var option = Option<int>.None.Bind(x => x.ToString(CultureInfo.InvariantCulture).ToOption());
-        Assert.That(option.IsNone, Is.True);
     }
 }

@@ -4,12 +4,12 @@
 namespace SleepingBear.Functional.Common;
 
 /// <summary>
-/// Extension methods for <see cref="Task{TResult}"/>.
+///     Extension methods for <see cref="Task{TResult}" />.
 /// </summary>
 public static class TaskExtensions
 {
     /// <summary>
-    /// Lifts a value to a <see cref="Task{T}"/>.
+    ///     Lifts a value to a <see cref="Task{T}" />.
     /// </summary>
     /// <param name="value"></param>
     /// <typeparam name="T"></typeparam>

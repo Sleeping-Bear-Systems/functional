@@ -1,7 +1,7 @@
 ﻿namespace SleepingBear.Functional.Errors.Tests;
 
 /// <summary>
-/// Tests for <see cref="ExceptionErrorExtensions"/>.
+///     Tests for <see cref="ExceptionErrorExtensions" />.
 /// </summary>
 internal static class ExceptionErrorExtensionsTests
 {

@@ -3,7 +3,7 @@
 namespace SleepingBear.Functional.Testing.Tests;
 
 /// <summary>
-/// Tests for <see cref="TestOption"/>.
+///     Tests for <see cref="TestOption" />.
 /// </summary>
 internal static class TestOptionTests
 {

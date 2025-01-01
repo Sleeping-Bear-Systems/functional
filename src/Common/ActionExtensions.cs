@@ -4,12 +4,12 @@
 namespace SleepingBear.Functional.Common;
 
 /// <summary>
-/// Extensions for <see cref="Action"/>.
+///     Extensions for <see cref="Action" />.
 /// </summary>
 public static class ActionExtensions
 {
     /// <summary>
-    /// Converts a <see cref="Action{T1}"/> to a <see cref="Func{T1, Unit}"/>.
+    ///     Converts a <see cref="Action{T1}" /> to a <see cref="Func{T1, Unit}" />.
     /// </summary>
     /// <param name="action"></param>
     /// <typeparam name="T1"></typeparam>
@@ -24,7 +24,7 @@ public static class ActionExtensions
     }
 
     /// <summary>
-    /// Converts a <see cref="Action{T1, T2}"/> to a <see cref="Func{T1, T2, Unit}"/>.
+    ///     Converts a <see cref="Action{T1, T2}" /> to a <see cref="Func{T1, T2, Unit}" />.
     /// </summary>
     /// <param name="action"></param>
     /// <typeparam name="T1"></typeparam>
@@ -40,7 +40,7 @@ public static class ActionExtensions
     }
 
     /// <summary>
-    /// Converts a <see cref="Action{T1, T2,T3}"/> to a <see cref="Func{T1, T2, T3, Unit}"/>.
+    ///     Converts a <see cref="Action{T1, T2,T3}" /> to a <see cref="Func{T1, T2, T3, Unit}" />.
     /// </summary>
     /// <param name="action"></param>
     /// <typeparam name="T1"></typeparam>

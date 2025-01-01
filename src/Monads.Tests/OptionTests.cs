@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using SleepingBear.Functional.Testing;
 
 namespace SleepingBear.Functional.Monads.Tests;
 
@@ -11,14 +12,7 @@ internal static class OptionTests
     public static void DefaultCtor_ReturnsNone()
     {
         var option = new Option<object>();
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.False);
-            Assert.That(option.IsNone, Is.True);
-            Assert.That(isSome, Is.False);
-            Assert.That(some, Is.Null);
-        });
+        Assert.That(option.IsNone, Is.True);
     }
 
     [Test]
@@ -26,14 +20,7 @@ internal static class OptionTests
     {
         var value = new object();
         var option = new Option<object>(value);
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(option.IsNone, Is.False);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(value));
-        });
+        TestOption.IsSomeSameAs(option, value);
     }
 
     [Test]
@@ -53,12 +40,7 @@ internal static class OptionTests
     public static void ImplicitOperator_NotNull_ReturnsSome()
     {
         Option<string> option = "test";
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(expected: "test"));
-        });
+        TestOption.IsSomeEqualTo(option, expected: "test");
     }
 
     [Test]
@@ -66,28 +48,14 @@ internal static class OptionTests
     {
         var value = new object();
         var option = value.ToOption();
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(option.IsNone, Is.False);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(value));
-        });
+        TestOption.IsSomeSameAs(option, value);
     }
 
     [Test]
     public static void ToOption_Null_ReturnsNone()
     {
         var option = default(object).ToOption();
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.False);
-            Assert.That(option.IsNone, Is.True);
-            Assert.That(isSome, Is.False);
-            Assert.That(some, Is.Null);
-        });
+        Assert.That(option.IsNone, Is.True);
     }
 
     [Test]
@@ -101,39 +69,21 @@ internal static class OptionTests
     public static void ToOption_PredicateTrue_ReturnsSome()
     {
         var option = 1234.ToOption(_ => true);
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(expected: 1234));
-        });
+        TestOption.IsSomeEqualTo(option, expected: 1234);
     }
 
     [Test]
-    public static void ToOption_PredicateFalse_ReturnsSome()
+    public static void ToOption_PredicateFalse_ReturnsNone()
     {
         var option = 1234.ToOption(_ => false);
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.False);
-            Assert.That(isSome, Is.False);
-            Assert.That(some, Is.EqualTo(expected: 0));
-        });
+        Assert.That(option.IsNone, Is.True);
     }
 
     [Test]
     public static void Map_Some_ReturnsSome()
     {
         var option = 1234.ToOption().Map(x => x.ToString(CultureInfo.InvariantCulture));
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(expected: "1234"));
-        });
+        TestOption.IsSomeEqualTo(option, expected: "1234");
     }
 
     [Test]
@@ -147,13 +97,7 @@ internal static class OptionTests
     public static void Bind_Some_ReturnsSome()
     {
         var option = 1234.ToOption().Bind(x => x.ToString(CultureInfo.InvariantCulture).ToOption());
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(expected: "1234"));
-        });
+        TestOption.IsSomeEqualTo(option, expected: "1234");
     }
 
     [Test]

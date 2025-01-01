@@ -1,5 +1,6 @@
-﻿using SleepingBear.Functional.Errors;
-using SleepingBear.Functional.Testing;
+﻿using NUnit.Framework.Internal;
+using SleepingBear.Functional.Errors;
+using TestResult = SleepingBear.Functional.Testing.TestResult;
 
 namespace SleepingBear.Functional.Monads.Tests;
 
@@ -13,6 +14,7 @@ internal static class ResultTests
     {
         var result = new Result<object>();
         TestResult.IsError<object, UnknownError>(result);
+        Assert.That(result.IsError, Is.True);
     }
 
     [Test]
@@ -20,19 +22,32 @@ internal static class ResultTests
     {
         var value = new object();
         var result = new Result<object>(value);
-        TestResult.IsOk(
-            result,
-            ok => { Assert.That(ok, Is.SameAs(value)); });
+        TestResult.IsOkSameAs(result, value);
+        Assert.That(result.IsError, Is.False);
     }
 
     [Test]
     public static void Ctor_Error_ReturnsError()
     {
-        var error = new ValueError<string>(Value: "error");
+        var error = "error".ToValueError();
         var result = new Result<string>(error);
-        TestResult.IsError(
-            result,
-            valueError => { Assert.That(valueError, Is.EqualTo(error)); });
+        TestResult.IsErrorEqualTo(result, error);
+        Assert.That(result.IsError, Is.True);
+    }
+
+    [Test]
+    public static void ImplicitOperatorOk_ReturnsOk()
+    {
+        Result<int> result = 1234;
+        TestResult.IsOkEqualTo(result, expected: 1234);
+    }
+    
+    [Test]
+    public static void ImplicitOperatorError_ReturnsError()
+    {
+        var error = "error".ToValueError();
+        Result<string> result = error;
+        TestResult.IsErrorEqualTo(result, error);
     }
 
     [Test]
@@ -40,49 +55,29 @@ internal static class ResultTests
     {
         var value = new object();
         var result = value.ToResultOk();
-        TestResult.IsOk(
-            result,
-            ok => { Assert.That(ok, Is.EqualTo(value)); });
+        TestResult.IsOkSameAs(result, value);
     }
 
     [Test]
     public static void ToResultError_ReturnsError()
     {
-        var error = new ValueError<string>(Value: "error");
+        var error = "error".ToValueError();
         var result = error.ToResultError<string>();
-        var (isOk, ok, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.False);
-            Assert.That(result.IsError, Is.True);
-            Assert.That(isOk, Is.False);
-            Assert.That(ok, Is.Null);
-            Assert.That(resultError, Is.EqualTo(error));
-        });
+        TestResult.IsErrorEqualTo(result, error);
     }
 
     [Test]
     public static void ToResultError_Value_ReturnsValueError()
     {
         var result = 1234.ToResultError<string, int>();
-        var (isOk, _, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.False);
-            Assert.That(resultError, Is.EqualTo(new ValueError<int>(Value: 1234)));
-        });
+        TestResult.IsErrorEqualTo(result,1234.ToValueError());
     }
 
     [Test]
     public static void ToResultError_NoArguments_ReturnsUnknownError()
     {
         var result = Result.ToResultError<int>();
-        var (isOk, _, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.False);
-            Assert.That(resultError, Is.EqualTo(UnknownError.Value));
-        });
+        TestResult.IsError<int, UnknownError>(result);
     }
 
     [Test]
@@ -90,11 +85,6 @@ internal static class ResultTests
     {
         var ex = new InvalidOperationException();
         var result = ex.ToResultError<string>();
-        var (isOk, _, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.False);
-            Assert.That(resultError, Is.EqualTo(new ExceptionError(ex)));
-        });
+        TestResult.IsErrorEqualTo(result, ex.ToExceptionError());
     }
 }

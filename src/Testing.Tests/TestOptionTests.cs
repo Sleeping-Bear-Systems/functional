@@ -8,7 +8,7 @@ namespace SleepingBear.Functional.Testing.Tests;
 internal static class TestOptionTests
 {
     [Test]
-    public static void IsSome_Some_Success()
+    public static void IsSome_Some_ValidatesBehavior()
     {
         var option = 1234.ToOption();
         var actionCalled = false;
@@ -20,5 +20,18 @@ internal static class TestOptionTests
                 Assert.That(value, Is.EqualTo(expected: 1234));
             });
         Assert.That(actionCalled, Is.True);
+    }
+
+    [Test]
+    public static void IsSomeEqualTo_Some_ValidatesBehavior()
+    {
+        TestOption.IsSomeEqualTo(1234.ToOption(), expected: 1234);
+    }
+
+    [Test]
+    public static void IsSomeSameAs_Some_ValidatesBehavior()
+    {
+        var value = new object();
+        TestOption.IsSomeSameAs(value.ToOption(), value);
     }
 }

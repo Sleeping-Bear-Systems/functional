@@ -20,4 +20,26 @@ public static class TestOption
             some => action?.Invoke(some),
             () => Assert.Fail(message: "Expected Some, but was None"));
     }
+
+    /// <summary>
+    /// Tests if <see cref="Option{T}"/> is some and the value is equal to the expected value.
+    /// </summary>
+    /// <param name="option">The <see cref="Option{T}"/>.</param>
+    /// <param name="expected">The expected some value.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    public static void IsSomeEqualTo<T>(Option<T> option, T expected) where T : notnull
+    {
+        IsSome(option, actual => { Assert.That(actual, Is.EqualTo(expected)); });
+    }
+
+    /// <summary>
+    /// Tests if <see cref="Option{T}"/> is some and the value is equal to the expected value.
+    /// </summary>
+    /// <param name="option">The <see cref="Option{T}"/>.</param>
+    /// <param name="expected">The expected some value.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    public static void IsSomeSameAs<T>(Option<T> option, T expected) where T : notnull
+    {
+        IsSome(option, actual => { Assert.That(actual, Is.SameAs(expected)); });
+    }
 }

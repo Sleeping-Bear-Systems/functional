@@ -724,7 +724,7 @@ public static class Result
     /// <param name="value">The value being lifted.</param>
     /// <param name="flag">The flag indicating the value is OK.</param>
     /// <param name="error">The <see cref="Error" />.</param>
-    /// <typeparam name="T">The type of the lifed value.</typeparam>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
     /// <returns>A <see cref="Result{T}" /> containing the value.</returns>
     public static Result<T> ToResultIf<T>(
         this T value,
@@ -797,7 +797,7 @@ public static class Result
     }
 
     /// <summary>
-    ///     Lifts a value to a <see cref="Result{T}" /> conditionally and asynchronously..
+    ///     Lifts a value to a <see cref="Result{T}" /> conditionally and asynchronously.
     /// </summary>
     /// <param name="task">The <see cref="Task{TResult}" /> containing the value.</param>
     /// <param name="flag">The flag indicating the value is OK.</param>

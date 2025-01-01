@@ -23,7 +23,7 @@ internal static class OptionTests
     public static void Bind_None_ReturnsNone()
     {
         var option = Option<int>.None.Bind(x => x.ToString(CultureInfo.InvariantCulture).ToOption());
-        Assert.That(option.IsNone, Is.True);
+        TestOption.IsNone(option);
     }
 
     [Test]
@@ -56,7 +56,7 @@ internal static class OptionTests
     public static void DefaultCtor_ReturnsNone()
     {
         var option = new Option<object>();
-        Assert.That(option.IsNone, Is.True);
+        TestOption.IsNone(option);
     }
 
     [Test]
@@ -70,14 +70,14 @@ internal static class OptionTests
     public static void ImplicitOperator_Null_ReturnsNone()
     {
         Option<string> option = null;
-        Assert.That(option.IsNone);
+        TestOption.IsNone(option);
     }
 
     [Test]
     public static void Map_None_ReturnsNone()
     {
         var option = Option<int>.None.Map(x => x.ToString(CultureInfo.InvariantCulture));
-        Assert.That(option.IsNone, Is.True);
+        TestOption.IsNone(option);
     }
 
     [Test]
@@ -151,7 +151,7 @@ internal static class OptionTests
     [Test]
     public static void None_ValidatesBehavior()
     {
-        Assert.That(Option<string>.None.IsNone, Is.True);
+        TestOption.IsNone(Option<object>.None);
     }
 
     [Test]
@@ -193,14 +193,14 @@ internal static class OptionTests
     public static void ToOption_Null_ReturnsNone()
     {
         var option = default(object).ToOption();
-        Assert.That(option.IsNone, Is.True);
+        TestOption.IsNone(option);
     }
 
     [Test]
     public static void ToOption_PredicateFalse_ReturnsNone()
     {
         var option = 1234.ToOption(_ => false);
-        Assert.That(option.IsNone, Is.True);
+        TestOption.IsNone(option);
     }
 
     [Test]
@@ -214,7 +214,7 @@ internal static class OptionTests
     public static void ToOption_PredicateWithNull_ReturnsNone()
     {
         var option = default(object).ToOption(_ => true);
-        Assert.That(option.IsNone, Is.True);
+        TestOption.IsNone(option);
     }
 
     [Test]

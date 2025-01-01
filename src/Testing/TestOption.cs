@@ -9,6 +9,16 @@ namespace SleepingBear.Functional.Testing;
 public static class TestOption
 {
     /// <summary>
+    ///     Tests a <see cref="Option{T}" /> is none.
+    /// </summary>
+    /// <param name="option">The <see cref="Option{T}" />.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    public static void IsNone<T>(Option<T> option) where T : notnull
+    {
+        Assert.That(option.IsNone, Is.True);
+    }
+
+    /// <summary>
     ///     Tests a <see cref="Option{T}" /> is some.
     /// </summary>
     /// <param name="option">The <see cref="Option{T}" />.</param>

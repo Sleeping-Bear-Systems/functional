@@ -10,6 +10,25 @@ namespace SleepingBear.Functional.Monads.Tests;
 internal static class ResultTests
 {
     [Test]
+    public static void Bind_Error_ValidatesBehavior()
+    {
+        var error = "error".ToValueError();
+        var result = error
+            .ToResultError<int>()
+            .Bind(ok => ok.ToString(CultureInfo.InvariantCulture).ToResultOk());
+        TestResult.IsErrorEqualTo(result, error);
+    }
+
+    [Test]
+    public static void Bind_Ok_ValidatesBehavior()
+    {
+        var result = 1234
+            .ToResultOk()
+            .Bind(ok => ok.ToString(CultureInfo.InvariantCulture).ToResultOk());
+        TestResult.IsOkEqualTo(result, expected: "1234");
+    }
+
+    [Test]
     public static void Ctor_Error_ReturnsError()
     {
         var error = "error".ToValueError();
@@ -86,24 +105,5 @@ internal static class ResultTests
         var value = new object();
         var result = value.ToResultOk();
         TestResult.IsOkSameAs(result, value);
-    }
-
-    [Test]
-    public static void Bind_Ok_ValidatesBehavior()
-    {
-        var result = 1234
-            .ToResultOk()
-            .Bind(ok => ok.ToString(CultureInfo.InvariantCulture).ToResultOk());
-        TestResult.IsOkEqualTo(result, expected: "1234");
-    }
-
-    [Test]
-    public static void Bind_Error_ValidatesBehavior()
-    {
-        var error = "error".ToValueError();
-        var result = error
-            .ToResultError<int>()
-            .Bind(ok => ok.ToString(CultureInfo.InvariantCulture).ToResultOk());
-        TestResult.IsErrorEqualTo(result, error);
     }
 }

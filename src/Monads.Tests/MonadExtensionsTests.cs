@@ -12,7 +12,7 @@ internal static class MonadExtensionsTests
     public static void ToOption_IsError_ReturnsNone()
     {
         var option = UnknownError.Value.ToResultError<string>().ToOption();
-        Assert.That(option.IsNone, Is.True);
+        TestOption.IsNone(option);
     }
 
     [Test]
@@ -47,6 +47,6 @@ internal static class MonadExtensionsTests
     public static void ToResult_ErrorIsSome_ReturnsSome()
     {
         var result = 1234.ToOption().ToResult(UnknownError.Value);
-        TestResult.IsErrorEqualTo(result, expected: 1234);
+        TestResult.IsOkEqualTo(result, expected: 1234);
     }
 }

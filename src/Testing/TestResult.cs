@@ -42,7 +42,8 @@ public static class TestResult
     }
 
     /// <summary>
-    ///     Check that a <see cref="SleepingBear.Functional.Monads.Result{T}" /> is error and the error is equal to the expected error.
+    ///     Check that a <see cref="SleepingBear.Functional.Monads.Result{T}" /> is error and the error is equal to the
+    ///     expected error.
     /// </summary>
     /// <param name="result">The <see cref="SleepingBear.Functional.Monads.Result{T}" />.</param>
     /// <param name="expected">The expected error.</param>
@@ -72,7 +73,8 @@ public static class TestResult
     }
 
     /// <summary>
-    ///     Check that a <see cref="SleepingBear.Functional.Monads.Result{T}" /> is OK and the value is equal to the expected value.
+    ///     Check that a <see cref="SleepingBear.Functional.Monads.Result{T}" /> is OK and the value is equal to the expected
+    ///     value.
     /// </summary>
     /// <param name="result">The <see cref="SleepingBear.Functional.Monads.Result{T}" />.</param>
     /// <param name="expected">The expected value.</param>
@@ -83,7 +85,8 @@ public static class TestResult
     }
 
     /// <summary>
-    ///     Checks that a <see cref="SleepingBear.Functional.Monads.Result{T}" /> is OK and the value is the same as the expected value.
+    ///     Checks that a <see cref="SleepingBear.Functional.Monads.Result{T}" /> is OK and the value is the same as the
+    ///     expected value.
     /// </summary>
     /// <param name="result">The <see cref="SleepingBear.Functional.Monads.Result{T}" />.</param>
     /// <param name="expected">The expected value.</param>

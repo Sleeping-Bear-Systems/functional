@@ -9,10 +9,32 @@ namespace SleepingBear.Functional.Monads.Tests;
 internal static class OptionTests
 {
     [Test]
+    public static void Bind_None_CallsNoneFunction()
+    {
+        var option = Option<string>
+            .None
+            .Bind(
+                some => some.ToString(CultureInfo.InvariantCulture),
+                () => "none".ToOption());
+        TestOption.IsSomeEqualTo(option, expected: "none");
+    }
+
+    [Test]
     public static void Bind_None_ReturnsNone()
     {
         var option = Option<int>.None.Bind(x => x.ToString(CultureInfo.InvariantCulture).ToOption());
         Assert.That(option.IsNone, Is.True);
+    }
+
+    [Test]
+    public static void Bind_Some_CallsSomeFunction()
+    {
+        var option = 1234
+            .ToOption()
+            .Bind(
+                some => some.ToString(CultureInfo.InvariantCulture),
+                () => Option<string>.None);
+        TestOption.IsSomeEqualTo(option, expected: "1234");
     }
 
     [Test]
@@ -66,9 +88,97 @@ internal static class OptionTests
     }
 
     [Test]
+    public static void MapNone_None_ReturnsOption()
+    {
+        var option = Option<int>.None.MapNone(() => 1234.ToOption());
+        TestOption.IsSomeEqualTo(option, expected: 1234);
+    }
+
+    [Test]
+    public static void Match_NoneFuncWithNone_ReturnsSome()
+    {
+        var match = Option<int>
+            .None
+            .Match(
+                some => some.ToString(CultureInfo.InvariantCulture),
+                () => "none");
+        Assert.That(match, Is.EqualTo(expected: "none"));
+    }
+
+    [Test]
+    public static void Match_NoneFuncWithSome_ReturnsSome()
+    {
+        var match = 1234
+            .ToOption()
+            .Match(
+                some => some.ToString(CultureInfo.InvariantCulture),
+                () => "none");
+        Assert.That(match, Is.EqualTo(expected: "1234"));
+    }
+
+    [Test]
+    public static void Match_NoneValueWithNone_ReturnsNoneValue()
+    {
+        var match = Option<int>.None.Match(noneValue: -1);
+        Assert.That(match, Is.EqualTo(expected: -1));
+    }
+
+    [Test]
+    public static void Match_NoneValueWithSome_ReturnsSome()
+    {
+        var match = 1234.ToOption().Match(noneValue: -1);
+        Assert.That(match, Is.EqualTo(expected: 1234));
+    }
+
+    [Test]
+    public static void Match_SomeFuncNoneValueWithNone_ReturnsNoneValue()
+    {
+        var match = Option<int>
+            .None
+            .Match(some => some.ToString(CultureInfo.InvariantCulture), none: "none");
+        Assert.That(match, Is.EqualTo(expected: "none"));
+    }
+
+    [Test]
+    public static void Match_SomeFuncNoneValueWithSome_ReturnsSomeFunc()
+    {
+        var match = 1234
+            .ToOption()
+            .Match(some => some.ToString(CultureInfo.InvariantCulture), none: "none");
+        Assert.That(match, Is.EqualTo(expected: "1234"));
+    }
+
+    [Test]
     public static void None_ValidatesBehavior()
     {
         Assert.That(Option<string>.None.IsNone, Is.True);
+    }
+
+    [Test]
+    public static void Tap_None_NoneActionCalled()
+    {
+        var actionCalled = false;
+        _ = Option<int>.None
+            .Tap(
+                _ => { Assert.Fail(); },
+                () => { actionCalled = true; });
+        Assert.That(actionCalled, Is.True);
+    }
+
+    [Test]
+    public static void Tap_Some_CallSomeAction()
+    {
+        var actionCalled = false;
+        _ = 1234
+            .ToOption()
+            .Tap(
+                some =>
+                {
+                    actionCalled = true;
+                    Assert.That(some, Is.EqualTo(expected: 1234));
+                },
+                Assert.Fail);
+        Assert.That(actionCalled, Is.True);
     }
 
     [Test]
@@ -105,5 +215,29 @@ internal static class OptionTests
     {
         var option = default(object).ToOption(_ => true);
         Assert.That(option.IsNone, Is.True);
+    }
+
+    [Test]
+    public static void TrySome_None_ValidatesBehavior()
+    {
+        var option = Option<int>.None;
+        var result = option.TrySome(out var some);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.False);
+            Assert.That(some, Is.EqualTo(expected: 0));
+        });
+    }
+
+    [Test]
+    public static void TrySome_Some_ValidatesBehavior()
+    {
+        var option = 1234.ToOption();
+        var result = option.TrySome(out var some);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.True);
+            Assert.That(some, Is.EqualTo(expected: 1234));
+        });
     }
 }

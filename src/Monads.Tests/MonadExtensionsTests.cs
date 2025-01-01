@@ -1,4 +1,5 @@
 ﻿using SleepingBear.Functional.Errors;
+using SleepingBear.Functional.Testing;
 
 namespace SleepingBear.Functional.Monads.Tests;
 
@@ -18,60 +19,34 @@ internal static class MonadExtensionsTests
     public static void ToOption_IsOk_ReturnsSome()
     {
         var option = "value".ToResultOk().ToOption();
-        var (isSome, some) = option;
-        Assert.Multiple(() =>
-        {
-            Assert.That(option.IsSome, Is.True);
-            Assert.That(isSome, Is.True);
-            Assert.That(some, Is.EqualTo(expected: "value"));
-        });
+        TestOption.IsSomeEqualTo(option, expected: "value");
     }
 
     [Test]
     public static void ToResult_ErrorFuncIsNone_ReturnsError()
     {
         var result = Option<int>.None.ToResult(() => UnknownError.Value);
-        var (isOk, _, error) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.False);
-            Assert.That(error, Is.EqualTo(UnknownError.Value));
-        });
+        TestResult.IsError<int, UnknownError>(result);
     }
 
     [Test]
     public static void ToResult_ErrorFuncIsSome_ReturnsSome()
     {
         var result = 1234.ToOption().ToResult(() => UnknownError.Value);
-        var (isOk, ok, _) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.True);
-            Assert.That(ok, Is.EqualTo(expected: 1234));
-        });
+        TestResult.IsOkEqualTo(result, expected: 1234);
     }
 
     [Test]
     public static void ToResult_ErrorIsNone_ReturnsError()
     {
         var result = Option<int>.None.ToResult(UnknownError.Value);
-        var (isOk, _, error) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.False);
-            Assert.That(error, Is.EqualTo(UnknownError.Value));
-        });
+        TestResult.IsError<int, UnknownError>(result);
     }
 
     [Test]
     public static void ToResult_ErrorIsSome_ReturnsSome()
     {
         var result = 1234.ToOption().ToResult(UnknownError.Value);
-        var (isOk, ok, _) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(isOk, Is.True);
-            Assert.That(ok, Is.EqualTo(expected: 1234));
-        });
+        TestResult.IsErrorEqualTo(result, expected: 1234);
     }
 }

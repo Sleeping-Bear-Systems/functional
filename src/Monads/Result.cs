@@ -649,7 +649,7 @@ public static class Result
             ? new Result<T>(value)
             : new Result<T>(error);
     }
-    
+
     /// <summary>
     /// Lifts a value to a <see cref="Result{T}"/> conditionally and asynchronously..
     /// </summary>
@@ -668,7 +668,7 @@ public static class Result
             ? new Result<T>(await task.ConfigureAwait(continueOnCapturedContext: false))
             : new Result<T>(error);
     }
-    
+
     /// <summary>
     /// Lifts a value to a <see cref="Result{T}"/> conditionally.
     /// </summary>

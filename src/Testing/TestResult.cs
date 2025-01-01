@@ -50,16 +50,6 @@ public static class TestResult
     {
         _ = result.Tap(
             ok => { NUnit.Framework.Assert.Fail($"Is OK: {ok}"); },
-            error =>
-            {
-                if (error is TError concreteError)
-                {
-                    action?.Invoke(concreteError);
-                }
-                else
-                {
-                    NUnit.Framework.Assert.Fail($"Error is not of the expected type: {typeof(TError).FullName}");
-                }
-            });
+            error => { TestError.Is(error, action); });
     }
 }

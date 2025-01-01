@@ -24,6 +24,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Monads\SleepingBear.Functional.Monads.csproj"/>
+        <ProjectReference Include="..\Testing\SleepingBear.Functional.Testing.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
 ﻿using SleepingBear.Functional.Errors;
+using SleepingBear.Functional.Testing;
 
 namespace SleepingBear.Functional.Monads.Tests;
 
@@ -11,15 +12,7 @@ internal static class ResultTests
     public static void DefaultCtor_ReturnFailure()
     {
         var result = new Result<object>();
-        var (isOk, ok, error) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.False);
-            Assert.That(result.IsError, Is.True);
-            Assert.That(isOk, Is.False);
-            Assert.That(ok, Is.Null);
-            Assert.That(error, Is.InstanceOf<UnknownError>());
-        });
+        TestResult.IsError<object, UnknownError>(result);
     }
 
     [Test]
@@ -27,15 +20,9 @@ internal static class ResultTests
     {
         var value = new object();
         var result = new Result<object>(value);
-        var (isOk, ok, error) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.True);
-            Assert.That(result.IsError, Is.False);
-            Assert.That(isOk, Is.True);
-            Assert.That(ok, Is.EqualTo(value));
-            Assert.That(error, Is.Null);
-        });
+        TestResult.IsOk(
+            result,
+            ok => { Assert.That(ok, Is.SameAs(value)); });
     }
 
     [Test]
@@ -43,15 +30,9 @@ internal static class ResultTests
     {
         var error = new ValueError<string>(Value: "error");
         var result = new Result<string>(error);
-        var (isOk, ok, resultError) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.False);
-            Assert.That(result.IsError, Is.True);
-            Assert.That(isOk, Is.False);
-            Assert.That(ok, Is.Null);
-            Assert.That(resultError, Is.EqualTo(error));
-        });
+        TestResult.IsError(
+            result,
+            valueError => { Assert.That(valueError, Is.EqualTo(error)); });
     }
 
     [Test]
@@ -59,15 +40,9 @@ internal static class ResultTests
     {
         var value = new object();
         var result = value.ToResultOk();
-        var (isOk, ok, error) = result;
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.IsOk, Is.True);
-            Assert.That(result.IsError, Is.False);
-            Assert.That(isOk, Is.True);
-            Assert.That(ok, Is.EqualTo(value));
-            Assert.That(error, Is.Null);
-        });
+        TestResult.IsOk(
+            result,
+            ok => { Assert.That(ok, Is.EqualTo(value)); });
     }
 
     [Test]

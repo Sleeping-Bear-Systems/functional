@@ -2,6 +2,8 @@
 using SleepingBear.Functional.Errors;
 using SleepingBear.Functional.Monads;
 
+// ReSharper disable RedundantNameQualifier
+
 namespace SleepingBear.Functional.Testing;
 
 /// <summary>
@@ -25,6 +27,28 @@ public static class TestResult
     }
 
     /// <summary>
+    /// Check that a <see cref="Result{T}"/> is OK and the value is equal to the expected value.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}"/>.</param>
+    /// <param name="expected">The expected value.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    public static void IsOkEqualTo<T>(Result<T> result, T expected) where T : notnull
+    {
+        IsOk(result, actual => { NUnit.Framework.Assert.That(actual, NUnit.Framework.Is.EqualTo(expected)); });
+    }
+
+    /// <summary>
+    /// Checks that a <see cref="Result{T}"/> is OK and the value is the same as the expected value. 
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}"/>.</param>
+    /// <param name="expected">The expected value.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    public static void IsOkSameAs<T>(Result<T> result, T expected) where T : notnull
+    {
+        IsOk(result, actual => { NUnit.Framework.Assert.That(actual, NUnit.Framework.Is.SameAs(expected)); });
+    }
+
+    /// <summary>
     /// Extension method to test that a <see cref="Result{T}"/> is error.
     /// </summary>
     /// <param name="result">The <see cref="Result{T}"/>.</param>
@@ -36,6 +60,21 @@ public static class TestResult
         _ = result.Tap(
             ok => { NUnit.Framework.Assert.Fail($"Is OK: {ok}"); },
             error => { action?.Invoke(error); });
+    }
+
+    /// <summary>
+    /// Check that a <see cref="Result{T}"/> is error and the error is equal to the expected error.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}"/>.</param>
+    /// <param name="expected">The expected error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <typeparam name="TError">The type of the error.</typeparam>
+    public static void IsErrorEqualTo<T, TError>(Result<T> result, TError expected)
+        where T : notnull
+    {
+        _ = result.Tap(
+            ok => { NUnit.Framework.Assert.Fail($"Is OK: {ok}"); },
+            actual => { NUnit.Framework.Assert.That(actual, NUnit.Framework.Is.EqualTo(expected)); });
     }
 
     /// <summary>

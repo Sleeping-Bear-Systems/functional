@@ -22,6 +22,21 @@ internal static class TestResultTests
     }
 
     [Test]
+    public static void IsOkEqualTo_ValidatesBehavior()
+    {
+        var result = 1234.ToResultOk();
+        TestResult.IsOkEqualTo(result, expected: 1234);
+    }
+
+    [Test]
+    public static void IsOkSameAs_ValidatesBehavior()
+    {
+        var value = new object();
+        var result = value.ToResultOk();
+        TestResult.IsOkSameAs(result, value);
+    }
+
+    [Test]
     public static void IsError_GenericActionNull_Success()
     {
         var result = UnknownError.Value.ToResultError<string>();
@@ -36,7 +51,7 @@ internal static class TestResultTests
     }
 
     [Test]
-    public static void IsError_ConcreteActionNoNull_Sucess()
+    public static void IsError_ConcreteActionNoNull_Success()
     {
         var result = UnknownError.Value.ToResultError<string>();
         var actionCalled = false;
@@ -59,5 +74,12 @@ internal static class TestResultTests
             Assert.That(error, Is.InstanceOf<UnknownError>());
         });
         Assert.That(actionCalled, Is.True);
+    }
+
+    [Test]
+    public static void IsErrorEqualTo_ValidatesBehavior()
+    {
+        var result = 1234.ToValueError().ToResultError<string>();
+        TestResult.IsErrorEqualTo(result, new ValueError<int>(Value: 1234));
     }
 }

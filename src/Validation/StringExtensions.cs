@@ -1,6 +1,8 @@
 ﻿using SleepingBear.Functional.Errors;
 using SleepingBear.Functional.Monads;
 
+// ReSharper disable UnusedMember.Global
+
 namespace SleepingBear.Functional.Validation;
 
 /// <summary>
@@ -46,6 +48,21 @@ public static class StringExtensions
     }
 
     /// <summary>
+    ///     Lifts a <see cref="string" /> to a <see cref="Result{TOk}" /> if the string is not null or empty.
+    /// </summary>
+    /// <param name="value">The <see cref="string" /> value.</param>
+    /// <param name="errorFunc">The error function.</param>
+    /// <returns>A <see cref="Result{T}" /> containing the string.</returns>
+    public static Result<string> ToResultIsNotNullOrEmpty(this string? value, Func<Error> errorFunc)
+    {
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        return string.IsNullOrEmpty(value)
+            ? errorFunc()
+            : value;
+    }
+
+    /// <summary>
     ///     Lifts a <see cref="string" /> to a <see cref="Result{TOk}" /> if the string is not null, empty, or whitespace.
     /// </summary>
     /// <param name="value">The <see cref="string" /> value.</param>
@@ -55,6 +72,21 @@ public static class StringExtensions
     {
         return string.IsNullOrWhiteSpace(value)
             ? error
+            : value;
+    }
+
+    /// <summary>
+    ///     Lifts a <see cref="string" /> to a <see cref="Result{TOk}" /> if the string is not null, empty, or whitespace.
+    /// </summary>
+    /// <param name="value">The <see cref="string" /> value.</param>
+    /// <param name="errorFunc">The error function.</param>
+    /// <returns>A <see cref="Result{T}" /> containing the string.</returns>
+    public static Result<string> ToResultIsNotNullOrWhiteSpace(this string? value, Func<Error> errorFunc)
+    {
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        return string.IsNullOrWhiteSpace(value)
+            ? errorFunc()
             : value;
     }
 }

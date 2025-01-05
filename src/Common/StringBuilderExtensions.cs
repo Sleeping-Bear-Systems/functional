@@ -1,5 +1,6 @@
 ﻿using System.Text;
 
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedType.Global
 // ReSharper disable UnusedMember.Global
 
@@ -20,7 +21,7 @@ public static class StringBuilderExtensions
     public static StringBuilder AppendIf(this StringBuilder builder, bool condition, string value)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        
+
         if (condition)
         {
             builder.Append(value);
@@ -42,7 +43,7 @@ public static class StringBuilderExtensions
 
         return builder.AppendIf(predicate(), value);
     }
-    
+
     /// <summary>
     ///     Appends line conditionally to a <see cref="StringBuilder" />.
     /// </summary>
@@ -53,7 +54,7 @@ public static class StringBuilderExtensions
     public static StringBuilder AppendLineIf(this StringBuilder builder, bool condition, string value)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        
+
         if (condition)
         {
             builder.AppendLine(value);

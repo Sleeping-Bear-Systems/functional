@@ -490,7 +490,7 @@ public static class Result
         var (isOk, ok, error) = result;
         return isOk ? ok! : await errorFunc(error!).ConfigureAwait(continueOnCapturedContext: false);
     }
-    
+
     /// <summary>
     ///     Matches a <see cref="Result{TIn}" /> to a value.
     /// </summary>

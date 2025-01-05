@@ -406,6 +406,92 @@ public static class Result
     }
 
     /// <summary>
+    ///     Matches a <see cref="Result{T}" />.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}" /> being matched.</param>
+    /// <param name="errorValue">The value returned if error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>The lifted value if OK, the <paramref name="errorValue" /> otherwise.</returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static T Match<T>(this Result<T> result, T errorValue) where T : notnull
+    {
+        var (isOk, ok, _) = result;
+        return isOk ? ok! : errorValue;
+    }
+
+    /// <summary>
+    ///     Matches a <see cref="Result{T}" /> asynchronously.
+    /// </summary>
+    /// <param name="task">The <see cref="Result{T}" /> being matched.</param>
+    /// <param name="errorValue">The value returned if error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>The lifted value if OK, the <paramref name="errorValue" /> otherwise.</returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<T> Match<T>(this Task<Result<T>> task, T errorValue) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+
+        var result = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isOk, ok, _) = result;
+        return isOk ? ok! : errorValue;
+    }
+
+    /// <summary>
+    ///     Matches a <see cref="Result{T}" />.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}" /> being matched.</param>
+    /// <param name="errorFunc">The error function.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>The lifted value if OK, the <paramref name="errorFunc" /> output otherwise.</returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static T Match<T>(this Result<T> result, Func<Error, T> errorFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        var (isOk, ok, error) = result;
+        return isOk ? ok! : errorFunc(error!);
+    }
+
+    /// <summary>
+    ///     Matches a <see cref="Result{T}" /> asynchronously.
+    /// </summary>
+    /// <param name="task">The <see cref="Result{T}" /> being matched.</param>
+    /// <param name="errorFunc">The error function.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>The lifted value if OK, the <paramref name="errorFunc" /> output otherwise.</returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<T> Match<T>(this Task<Result<T>> task, Func<Error, T> errorFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        var result = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isOk, ok, error) = result;
+        return isOk ? ok! : errorFunc(error!);
+    }
+
+    /// <summary>
+    ///     Matches a <see cref="Result{T}" /> asynchronously.
+    /// </summary>
+    /// <param name="task">The <see cref="Result{T}" /> being matched.</param>
+    /// <param name="errorFunc">The error function.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>The lifted value if OK, the <paramref name="errorFunc" /> output otherwise.</returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<T> Match<T>(this Task<Result<T>> task, Func<Error, Task<T>> errorFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(errorFunc);
+
+        var result = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isOk, ok, error) = result;
+        return isOk ? ok! : await errorFunc(error!).ConfigureAwait(continueOnCapturedContext: false);
+    }
+    
+    /// <summary>
     ///     Matches a <see cref="Result{TIn}" /> to a value.
     /// </summary>
     /// <param name="result"></param>

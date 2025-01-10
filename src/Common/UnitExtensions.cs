@@ -1,6 +1,3 @@
-// ReSharper disable UnusedMember.Global
-// ReSharper disable UnusedType.Global
-
 namespace SleepingBear.Functional.Common;
 
 /// <summary>

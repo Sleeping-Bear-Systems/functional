@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using SleepingBear.Functional.Errors;
 
 namespace SleepingBear.Functional.Monads;
@@ -569,6 +570,28 @@ public static class Result
     }
 
     /// <summary>
+    ///     Matches a <see cref="Result{T}" /> or adds an error to collection.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}" />.</param>
+    /// <param name="errors">The <see cref="Error" /> collection.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>The lifted value if OK.</returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static T MatchOrAddError<T>(this Result<T> result, ref ImmutableList<Error> errors) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(errors);
+
+        var (isOk, ok, error) = result;
+        if (isOk)
+        {
+            return ok!;
+        }
+
+        errors = errors.Add(error!);
+        return default!;
+    }
+
+    /// <summary>
     ///     Matches a <see cref="Result{T}" /> or throws an exception.
     /// </summary>
     /// <param name="result">The <see cref="Result{T}" /> being matched.</param>
@@ -1040,5 +1063,36 @@ public static class Result
     public static Result<T> ToResultOk<T>(this T ok) where T : notnull
     {
         return new Result<T>(ok);
+    }
+
+    /// <summary>
+    ///     Tries to get the error of a <see cref="Result{T}" />.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}" />.</param>
+    /// <param name="error">The error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>True if OK, false otherwise.</returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static bool TryError<T>(this Result<T> result, [NotNullWhen(returnValue: true)] out Error? error)
+        where T : notnull
+    {
+        var (isOk, _, errorValue) = result;
+        error = errorValue!;
+        return !isOk;
+    }
+
+    /// <summary>
+    ///     Tries to get the value of a <see cref="Result{T}" />.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}" />.</param>
+    /// <param name="ok">The lifted value.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>True if OK, false otherwise.</returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static bool TryOk<T>(this Result<T> result, [NotNullWhen(returnValue: true)] out T? ok) where T : notnull
+    {
+        var (isOk, okValue, _) = result;
+        ok = okValue!;
+        return isOk;
     }
 }

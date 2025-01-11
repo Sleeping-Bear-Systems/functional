@@ -1,5 +1,6 @@
 ﻿// ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace SleepingBear.Functional.Common;
 
@@ -87,9 +88,7 @@ public static class PipeExtensions
         ArgumentNullException.ThrowIfNull(predicate);
         ArgumentNullException.ThrowIfNull(func);
 
-        return predicate(value)
-            ? func(value)
-            : value;
+        return value.PipeIf(predicate(value), func);
     }
 
     /// <summary>

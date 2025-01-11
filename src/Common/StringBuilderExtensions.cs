@@ -34,6 +34,22 @@ public static class StringBuilderExtensions
     ///     Appends conditionally to a <see cref="StringBuilder" />.
     /// </summary>
     /// <param name="builder"></param>
+    /// <param name="condition"></param>
+    /// <param name="trueValue"></param>
+    /// <param name="falseValue"></param>
+    /// <returns></returns>
+    public static StringBuilder AppendIf(this StringBuilder builder, bool condition, string trueValue,
+        string falseValue)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        return builder.Append(condition ? trueValue : falseValue);
+    }
+
+    /// <summary>
+    ///     Appends conditionally to a <see cref="StringBuilder" />.
+    /// </summary>
+    /// <param name="builder"></param>
     /// <param name="predicate"></param>
     /// <param name="value"></param>
     /// <returns></returns>
@@ -42,6 +58,22 @@ public static class StringBuilderExtensions
         ArgumentNullException.ThrowIfNull(predicate);
 
         return builder.AppendIf(predicate(), value);
+    }
+
+    /// <summary>
+    ///     Appends conditionally to a <see cref="StringBuilder" />.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="predicate"></param>
+    /// <param name="trueValue"></param>
+    /// <param name="falseValue"></param>
+    /// <returns></returns>
+    public static StringBuilder AppendIf(this StringBuilder builder, Func<bool> predicate, string trueValue,
+        string falseValue)
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return builder.AppendIf(predicate(), trueValue, falseValue);
     }
 
     /// <summary>
@@ -67,6 +99,22 @@ public static class StringBuilderExtensions
     ///     Appends line conditionally to a <see cref="StringBuilder" />.
     /// </summary>
     /// <param name="builder"></param>
+    /// <param name="condition"></param>
+    /// <param name="trueValue"></param>
+    /// <param name="falseValue"></param>
+    /// <returns></returns>
+    public static StringBuilder AppendLineIf(this StringBuilder builder, bool condition, string trueValue,
+        string falseValue)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        return builder.AppendLine(condition ? trueValue : falseValue);
+    }
+
+    /// <summary>
+    ///     Appends line conditionally to a <see cref="StringBuilder" />.
+    /// </summary>
+    /// <param name="builder"></param>
     /// <param name="predicate"></param>
     /// <param name="value"></param>
     /// <returns></returns>
@@ -75,5 +123,21 @@ public static class StringBuilderExtensions
         ArgumentNullException.ThrowIfNull(predicate);
 
         return builder.AppendLineIf(predicate(), value);
+    }
+
+    /// <summary>
+    ///     Appends line conditionally to a <see cref="StringBuilder" />.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="predicate"></param>
+    /// <param name="trueValue"></param>
+    /// <param name="falseValue"></param>
+    /// <returns></returns>
+    public static StringBuilder AppendLineIf(this StringBuilder builder, Func<bool> predicate, string trueValue,
+        string falseValue)
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return builder.AppendLineIf(predicate(), trueValue, falseValue);
     }
 }

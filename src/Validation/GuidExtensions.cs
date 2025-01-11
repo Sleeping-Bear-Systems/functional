@@ -1,5 +1,4 @@
-﻿using SleepingBear.Functional.Errors;
-using SleepingBear.Functional.Monads;
+﻿using SleepingBear.Functional.Monads;
 
 namespace SleepingBear.Functional.Validation;
 
@@ -9,34 +8,37 @@ namespace SleepingBear.Functional.Validation;
 public static class GuidExtensions
 {
     /// <summary>
-    ///     Checks if the lifted <see cref="Guid" /> is not empty.
+    ///     Tries to convert a value to a <see cref="Guid" />.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="errorFunc"></param>
-    /// <returns></returns>
-    public static Result<Guid> CheckIsNotEmpty(this Result<Guid> result, Func<Error> errorFunc)
+    /// <param name="value">The value to be converted.</param>
+    /// <returns>A <see cref="Option{T}" /> containing the <see cref="Guid" />.</returns>
+    public static Option<Guid> AsGuid(this object? value)
     {
-        return result.Bind<Guid, Guid>(ok => ok == Guid.Empty ? errorFunc() : ok);
+        return value switch
+        {
+            Guid g => g,
+            string g => Guid.TryParse(g, out var guid) ? guid : Option<Guid>.None,
+            _ => Option<Guid>.None
+        };
     }
 
     /// <summary>
-    ///     Checks if the lifted <see cref="Guid" /> is not empty.
+    ///     Extension method to check if a <see cref="Guid" /> is empty.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="error"></param>
-    /// <returns></returns>
-    public static Result<Guid> CheckIsNotEmpty(this Result<Guid> result, Error error)
+    /// <param name="value">The <see cref="Guid" />.</param>
+    /// <returns>True if empty, false otherwise.</returns>
+    public static bool IsEmpty(this Guid value)
     {
-        return result.Bind<Guid, Guid>(ok => ok == Guid.Empty ? error : ok);
+        return value == Guid.Empty;
     }
 
     /// <summary>
-    ///     Checks if the lifted <see cref="Guid" /> is not empty.
+    ///     Extension method to check if a <see cref="Guid" /> is not empty.
     /// </summary>
-    /// <param name="option"></param>
-    /// <returns></returns>
-    public static Option<Guid> CheckIsNotEmpty(this Option<Guid> option)
+    /// <param name="value">The <see cref="Guid" /> value.</param>
+    /// <returns>True if not empty, false otherwise.</returns>
+    public static bool IsNotEmpty(this Guid value)
     {
-        return option.Bind(some => some == Guid.Empty ? Option<Guid>.None : some);
+        return !IsEmpty(value);
     }
 }

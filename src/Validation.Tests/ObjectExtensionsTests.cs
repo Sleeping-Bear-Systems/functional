@@ -1,4 +1,5 @@
-﻿using SleepingBear.Functional.Errors;
+﻿using SleepingBear.Functional.Common;
+using SleepingBear.Functional.Errors;
 using SleepingBear.Functional.Testing;
 
 namespace SleepingBear.Functional.Validation.Tests;
@@ -9,6 +10,20 @@ namespace SleepingBear.Functional.Validation.Tests;
 internal static class ObjectExtensionsTests
 {
     [Test]
+    public static void ToResultIsNotNull_ErrorFunc_NotNull_ReturnOk()
+    {
+        var result = "ok".ToResultIsNotNull(UnknownError.Value.ToFunc());
+        TestResult.IsOkEqualTo(result, expected: "ok");
+    }
+
+    [Test]
+    public static void ToResultIsNotNull_ErrorFunc_Null_ReturnsError()
+    {
+        var result = default(string).ToResultIsNotNull(UnknownError.Value.ToFunc());
+        TestResult.IsErrorEqualTo(result, UnknownError.Value);
+    }
+
+    [Test]
     public static void ToResultIsNotNull_NoNull_ReturnOk()
     {
         var result = "ok".ToResultIsNotNull(UnknownError.Value);
@@ -18,8 +33,7 @@ internal static class ObjectExtensionsTests
     [Test]
     public static void ToResultIsNotNull_Null_ReturnsError()
     {
-        var error = 1234.ToValueError();
-        var result = default(string).ToResultIsNotNull(error);
-        TestResult.IsErrorEqualTo(result, error);
+        var result = default(string).ToResultIsNotNull(UnknownError.Value);
+        TestResult.IsErrorEqualTo(result, UnknownError.Value);
     }
 }

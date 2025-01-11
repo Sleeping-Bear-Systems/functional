@@ -1,8 +1,6 @@
 ﻿using SleepingBear.Functional.Errors;
 using SleepingBear.Functional.Monads;
 
-// ReSharper disable UnusedMember.Global
-
 namespace SleepingBear.Functional.Validation;
 
 /// <summary>
@@ -11,42 +9,34 @@ namespace SleepingBear.Functional.Validation;
 public static class GuidExtensions
 {
     /// <summary>
-    ///     Lifts a <see cref="Guid" /> to a <see cref="Option{Guid}" /> if not empty.
+    ///     Checks if the lifted <see cref="Guid" /> is not empty.
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="result"></param>
+    /// <param name="errorFunc"></param>
     /// <returns></returns>
-    public static Option<Guid> ToOptionIsNotEmpty(this Guid value)
+    public static Result<Guid> CheckIsNotEmpty(this Result<Guid> result, Func<Error> errorFunc)
     {
-        return value == Guid.Empty
-            ? Option<Guid>.None
-            : value;
+        return result.Bind<Guid, Guid>(ok => ok == Guid.Empty ? errorFunc() : ok);
     }
 
     /// <summary>
-    ///     Lifts a <see cref="Guid" /> to a <see cref="Result{Guid}" /> if not empty.
+    ///     Checks if the lifted <see cref="Guid" /> is not empty.
     /// </summary>
-    /// <param name="value">The <see cref="Guid" /> value.</param>
-    /// <param name="error">The error.</param>
+    /// <param name="result"></param>
+    /// <param name="error"></param>
     /// <returns></returns>
-    public static Result<Guid> ToResultIsNotEmpty(this Guid value, Error error)
+    public static Result<Guid> CheckIsNotEmpty(this Result<Guid> result, Error error)
     {
-        return value == Guid.Empty
-            ? error
-            : value;
+        return result.Bind<Guid, Guid>(ok => ok == Guid.Empty ? error : ok);
     }
 
     /// <summary>
-    ///     Lifts a <see cref="Guid" /> to a <see cref="Result{Guid}" /> if not empty.
+    ///     Checks if the lifted <see cref="Guid" /> is not empty.
     /// </summary>
-    /// <param name="value">The <see cref="Guid" /> value.</param>
-    /// <param name="errorFunc">The error function.</param>
+    /// <param name="option"></param>
     /// <returns></returns>
-    public static Result<Guid> ToResultIsNotEmpty(this Guid value, Func<Error> errorFunc)
+    public static Option<Guid> CheckIsNotEmpty(this Option<Guid> option)
     {
-        ArgumentNullException.ThrowIfNull(errorFunc);
-
-        return value == Guid.Empty
-            ? errorFunc()
-            : value;
+        return option.Bind(some => some == Guid.Empty ? Option<Guid>.None : some);
     }
 }

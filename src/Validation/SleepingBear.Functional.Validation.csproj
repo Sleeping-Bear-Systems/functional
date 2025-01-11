@@ -29,6 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Common\SleepingBear.Functional.Common.csproj"/>
         <ProjectReference Include="..\Testing\SleepingBear.Functional.Testing.csproj"/>
     </ItemGroup>
 

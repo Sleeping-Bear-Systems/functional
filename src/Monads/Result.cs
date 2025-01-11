@@ -266,6 +266,78 @@ public static class Result
     }
 
     /// <summary>
+    ///     Checks the lifted value of a <see cref="Result{T}" />.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}" />.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <param name="errorFunc">The error function.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}" />.</returns>
+    public static Result<T> Check<T>(this Result<T> result, Func<T, bool> predicate, Func<Error> errorFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return result.Bind(value => predicate(value)
+            ? value.ToResultOk()
+            : errorFunc());
+    }
+
+    /// <summary>
+    ///     Checks the lifted value of a <see cref="Result{T}" /> matches the predicate.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}" />.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <param name="error">The error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}" />.</returns>
+    public static Result<T> Check<T>(this Result<T> result, Func<T, bool> predicate, Error error)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return result.Bind(value => predicate(value)
+            ? value.ToResultOk()
+            : error);
+    }
+
+    /// <summary>
+    ///     Checks the lifted value of a <see cref="Result{T}" /> does not match the predicate.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}" />.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <param name="errorFunc">The error function.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}" />.</returns>
+    public static Result<T> CheckNot<T>(this Result<T> result, Func<T, bool> predicate, Func<Error> errorFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return result.Bind(value => predicate(value)
+            ? errorFunc()
+            : value.ToResultOk());
+    }
+
+    /// <summary>
+    ///     Checks the lifted value of a <see cref="Result{T}" /> does not match the predicate.
+    /// </summary>
+    /// <param name="result">The <see cref="Result{T}" />.</param>
+    /// <param name="predicate">The predicate.</param>
+    /// <param name="error">The error.</param>
+    /// <typeparam name="T">The type of the lifted value.</typeparam>
+    /// <returns>A <see cref="Result{T}" />.</returns>
+    public static Result<T> CheckNot<T>(this Result<T> result, Func<T, bool> predicate, Error error)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return result.Bind(value => predicate(value)
+            ? error
+            : value.ToResultOk());
+    }
+
+    /// <summary>
     ///     Maps a <see cref="Result{TIn}" /> to a <see cref="Result{TOut}" />.
     /// </summary>
     /// <param name="result">The result being mapped.</param>
@@ -831,16 +903,16 @@ public static class Result
     ///     Lifts a value to a <see cref="Result{T}" /> conditionally.
     /// </summary>
     /// <param name="value">The value being lifted.</param>
-    /// <param name="flag">The flag indicating the value is OK.</param>
+    /// <param name="condition">The flag indicating the value is OK.</param>
     /// <param name="error">The <see cref="Error" />.</param>
     /// <typeparam name="T">The type of the lifted value.</typeparam>
     /// <returns>A <see cref="Result{T}" /> containing the value.</returns>
     public static Result<T> ToResultIf<T>(
         this T value,
-        bool flag,
+        bool condition,
         Error error) where T : notnull
     {
-        return flag
+        return condition
             ? new Result<T>(value)
             : new Result<T>(error);
     }

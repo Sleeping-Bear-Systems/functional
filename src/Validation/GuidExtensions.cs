@@ -1,7 +1,4 @@
-﻿using SleepingBear.Functional.Errors;
-using SleepingBear.Functional.Monads;
-
-// ReSharper disable UnusedMember.Global
+﻿using SleepingBear.Functional.Monads;
 
 namespace SleepingBear.Functional.Validation;
 
@@ -11,42 +8,37 @@ namespace SleepingBear.Functional.Validation;
 public static class GuidExtensions
 {
     /// <summary>
-    ///     Lifts a <see cref="Guid" /> to a <see cref="Option{Guid}" /> if not empty.
+    ///     Tries to convert a value to a <see cref="Guid" />.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    public static Option<Guid> ToOptionIsNotEmpty(this Guid value)
+    /// <param name="value">The value to be converted.</param>
+    /// <returns>A <see cref="Option{T}" /> containing the <see cref="Guid" />.</returns>
+    public static Option<Guid> AsGuid(this object? value)
     {
-        return value == Guid.Empty
-            ? Option<Guid>.None
-            : value;
+        return value switch
+        {
+            Guid g => g,
+            string g => Guid.TryParse(g, out var guid) ? guid : Option<Guid>.None,
+            _ => Option<Guid>.None
+        };
     }
 
     /// <summary>
-    ///     Lifts a <see cref="Guid" /> to a <see cref="Result{Guid}" /> if not empty.
+    ///     Extension method to check if a <see cref="Guid" /> is empty.
     /// </summary>
-    /// <param name="value">The <see cref="Guid" /> value.</param>
-    /// <param name="error">The error.</param>
-    /// <returns></returns>
-    public static Result<Guid> ToResultIsNotEmpty(this Guid value, Error error)
+    /// <param name="value">The <see cref="Guid" />.</param>
+    /// <returns>True if empty, false otherwise.</returns>
+    public static bool IsEmpty(this Guid value)
     {
-        return value == Guid.Empty
-            ? error
-            : value;
+        return value == Guid.Empty;
     }
 
     /// <summary>
-    ///     Lifts a <see cref="Guid" /> to a <see cref="Result{Guid}" /> if not empty.
+    ///     Extension method to check if a <see cref="Guid" /> is not empty.
     /// </summary>
     /// <param name="value">The <see cref="Guid" /> value.</param>
-    /// <param name="errorFunc">The error function.</param>
-    /// <returns></returns>
-    public static Result<Guid> ToResultIsNotEmpty(this Guid value, Func<Error> errorFunc)
+    /// <returns>True if not empty, false otherwise.</returns>
+    public static bool IsNotEmpty(this Guid value)
     {
-        ArgumentNullException.ThrowIfNull(errorFunc);
-
-        return value == Guid.Empty
-            ? errorFunc()
-            : value;
+        return !IsEmpty(value);
     }
 }

@@ -220,6 +220,36 @@ public static class Option
     }
 
     /// <summary>
+    ///     Checks if the value of an <see cref="Option{T}" /> satisfies a predicate.
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="predicate"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static Option<T> Check<T>(this Option<T> option, Func<T, bool> predicate)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return option.Bind(some => predicate(some) ? some : Option<T>.None);
+    }
+
+    /// <summary>
+    ///     Checks if the value of an <see cref="Option{T}" /> does not satisfies a predicate.
+    /// </summary>
+    /// <param name="option"></param>
+    /// <param name="predicate"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static Option<T> CheckNot<T>(this Option<T> option, Func<T, bool> predicate)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+
+        return option.Bind(some => predicate(some) ? Option<T>.None : some);
+    }
+
+    /// <summary>
     ///     Maps a <see cref="Option{TIn}" /> to <see cref="Option{TOut}" />.
     /// </summary>
     /// <param name="option">The <see cref="Option{TIn}" /> being mapped.</param>

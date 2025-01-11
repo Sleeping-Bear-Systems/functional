@@ -1,7 +1,6 @@
-﻿using SleepingBear.Functional.Errors;
+﻿using SleepingBear.Functional.Common;
+using SleepingBear.Functional.Errors;
 using SleepingBear.Functional.Monads;
-
-// ReSharper disable UnusedMember.Global
 
 namespace SleepingBear.Functional.Validation;
 
@@ -11,82 +10,49 @@ namespace SleepingBear.Functional.Validation;
 public static class StringExtensions
 {
     /// <summary>
-    ///     Lifts a <see cref="string" /> to a <see cref="Option{T}" /> if the string is not null or empty.
+    ///     Tokenizes a <see cref="string" />.
     /// </summary>
-    /// <param name="value">The <see cref="string" /> value.</param>
-    /// <returns>A <see cref="Option{T}" /> containing the string.</returns>
-    public static Option<string> ToOptionIsNotNullOrEmpty(this string? value)
-    {
-        return string.IsNullOrEmpty(value)
-            ? Option<string>.None
-            : value;
-    }
-
-    /// <summary>
-    ///     Lifts a <see cref="string" /> to a <see cref="Option{T}" /> if the string is not null, empty, or whitespace.
-    /// </summary>
-    /// <param name="value">The <see cref="string" /> value.</param>
-    /// <returns>A <see cref="Option{T}" /> containing the string.</returns>
-    public static Option<string> ToOptionIsNotNullOrWhiteSpace(this string? value)
-    {
-        return string.IsNullOrWhiteSpace(value)
-            ? Option<string>.None
-            : value;
-    }
-
-    /// <summary>
-    ///     Lifts a <see cref="string" /> to a <see cref="Result{TOk}" /> if the string is not null or empty.
-    /// </summary>
-    /// <param name="value">The <see cref="string" /> value.</param>
-    /// <param name="error">The error.</param>
-    /// <returns>A <see cref="Result{T}" /> containing the string.</returns>
-    public static Result<string> ToResultIsNotNullOrEmpty(this string? value, Error error)
-    {
-        return string.IsNullOrEmpty(value)
-            ? error
-            : value;
-    }
-
-    /// <summary>
-    ///     Lifts a <see cref="string" /> to a <see cref="Result{TOk}" /> if the string is not null or empty.
-    /// </summary>
-    /// <param name="value">The <see cref="string" /> value.</param>
-    /// <param name="errorFunc">The error function.</param>
-    /// <returns>A <see cref="Result{T}" /> containing the string.</returns>
-    public static Result<string> ToResultIsNotNullOrEmpty(this string? value, Func<Error> errorFunc)
+    /// <param name="value"></param>
+    /// <param name="errorFunc"></param>
+    /// <returns></returns>
+    public static Result<string> AsToken(this string? value, Func<Error> errorFunc)
     {
         ArgumentNullException.ThrowIfNull(errorFunc);
 
-        return string.IsNullOrEmpty(value)
-            ? errorFunc()
-            : value;
+        return value.Tokenize().ToResultOk().CheckNot(string.IsNullOrWhiteSpace, errorFunc);
     }
 
     /// <summary>
-    ///     Lifts a <see cref="string" /> to a <see cref="Result{TOk}" /> if the string is not null, empty, or whitespace.
+    ///     Tokenizes a <see cref="string" />.
     /// </summary>
-    /// <param name="value">The <see cref="string" /> value.</param>
-    /// <param name="error">The error.</param>
-    /// <returns>A <see cref="Result{T}" /> containing the string.</returns>
-    public static Result<string> ToResultIsNotNullOrWhiteSpace(this string? value, Error error)
+    /// <param name="value"></param>
+    /// <param name="error"></param>
+    /// <returns></returns>
+    public static Result<string> AsToken(this string? value, Error error)
     {
-        return string.IsNullOrWhiteSpace(value)
-            ? error
-            : value;
+        return value.Tokenize().ToResultOk().CheckNot(string.IsNullOrWhiteSpace, error);
     }
 
     /// <summary>
-    ///     Lifts a <see cref="string" /> to a <see cref="Result{TOk}" /> if the string is not null, empty, or whitespace.
+    ///     Tokenizes a <see cref="string" />.
     /// </summary>
-    /// <param name="value">The <see cref="string" /> value.</param>
-    /// <param name="errorFunc">The error function.</param>
-    /// <returns>A <see cref="Result{T}" /> containing the string.</returns>
-    public static Result<string> ToResultIsNotNullOrWhiteSpace(this string? value, Func<Error> errorFunc)
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static Option<string> AsToken(this string? value)
     {
-        ArgumentNullException.ThrowIfNull(errorFunc);
+        return value.Tokenize().ToOption().CheckNot(string.IsNullOrWhiteSpace);
+    }
 
-        return string.IsNullOrWhiteSpace(value)
-            ? errorFunc()
-            : value;
+    /// <summary>
+    ///     Tokenizes a <see cref="string" />.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <remarks>
+    ///     Tokens are not null and have no preceding or trailing whitespace.
+    /// </remarks>
+    public static string Tokenize(this string? value)
+    {
+        return value.IfNull().Trim();
     }
 }

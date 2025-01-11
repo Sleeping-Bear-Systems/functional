@@ -1,5 +1,4 @@
-﻿using SleepingBear.Functional.Errors;
-using SleepingBear.Functional.Testing;
+﻿using SleepingBear.Functional.Testing;
 
 namespace SleepingBear.Functional.Validation.Tests;
 
@@ -9,32 +8,47 @@ namespace SleepingBear.Functional.Validation.Tests;
 internal static class GuidExtensionsTests
 {
     [Test]
-    public static void ToOptionIsNotEmpty_Empty_ReturnsError()
+    public static void AsGuid_Guid_ReturnsSome()
     {
-        var option = Guid.Empty.ToOptionIsNotEmpty();
+        var option = Guid.Empty.AsGuid();
+        TestOption.IsSomeEqualTo(option, Guid.Empty);
+    }
+
+    [Test]
+    public static void AsGuid_InvalidString_ReturnsSome()
+    {
+        var option = "not a guid".AsGuid();
         TestOption.IsNone(option);
     }
 
     [Test]
-    public static void ToOptionIsNotEmpty_NotEmpty_ReturnsOk()
+    public static void AsGuid_ValidString_ReturnsSome()
     {
-        var value = new Guid(g: "37378EF9-4411-4F04-BF54-291CA21BC85B");
-        var option = value.ToOptionIsNotEmpty();
-        TestOption.IsSomeEqualTo(option, value);
+        var option = Guid.Empty.ToString().AsGuid();
+        TestOption.IsSomeEqualTo(option, Guid.Empty);
     }
 
     [Test]
-    public static void ToResultIsNotEmpty_Empty_ReturnsError()
+    public static void IsEmpty_Empty_ReturnsTrue()
     {
-        var result = Guid.Empty.ToResultIsNotEmpty(UnknownError.Value);
-        TestResult.IsError<Guid, UnknownError>(result);
+        Assert.That(Guid.Empty.IsEmpty(), Is.True);
     }
 
     [Test]
-    public static void ToResultIsNotEmpty_NotEmpty_ReturnsOk()
+    public static void IsEmpty_NotEmpty_ReturnsFalse()
     {
-        var value = new Guid(g: "37378EF9-4411-4F04-BF54-291CA21BC85B");
-        var result = value.ToResultIsNotEmpty(UnknownError.Value);
-        TestResult.IsOkEqualTo(result, value);
+        Assert.That(new Guid(g: "F6AB757B-1AC1-4E99-BC08-4BFBF5897B9B").IsEmpty(), Is.False);
+    }
+
+    [Test]
+    public static void IsNotEmpty_Empty_ReturnsFalse()
+    {
+        Assert.That(Guid.Empty.IsNotEmpty(), Is.False);
+    }
+
+    [Test]
+    public static void IsNotEmpty_NotEmpty_ReturnsTrue()
+    {
+        Assert.That(new Guid(g: "F6AB757B-1AC1-4E99-BC08-4BFBF5897B9B").IsNotEmpty(), Is.True);
     }
 }

@@ -10,8 +10,6 @@ public static class DecimalExtensions
     /// <summary>
     ///     Tries to convert object into a <see cref="decimal" />.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
     public static Option<decimal> AsDecimal(this object? value)
     {
         return value switch

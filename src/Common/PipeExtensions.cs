@@ -12,11 +12,6 @@ public static class PipeExtensions
     /// <summary>
     ///     Pipes a value.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="func"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     public static TOut Pipe<TIn, TOut>(this TIn value, Func<TIn, TOut> func)
     {
         ArgumentNullException.ThrowIfNull(func);
@@ -27,11 +22,6 @@ public static class PipeExtensions
     /// <summary>
     ///     Pipes a value asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="func"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     public static async Task<TOut> PipeAsync<TIn, TOut>(this Task<TIn> task, Func<TIn, TOut> func)
     {
         ArgumentNullException.ThrowIfNull(task);
@@ -44,11 +34,6 @@ public static class PipeExtensions
     /// <summary>
     ///     Pipes a value asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="func"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     public static async Task<TOut> PipeAsync<TIn, TOut>(this Task<TIn> task, Func<TIn, Task<TOut>> func)
     {
         ArgumentNullException.ThrowIfNull(task);
@@ -192,10 +177,6 @@ public static class PipeExtensions
     /// <summary>
     ///     Taps a value.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="action"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <returns></returns>
     public static TIn Tap<TIn>(this TIn value, Action<TIn> action)
     {
         ArgumentNullException.ThrowIfNull(action);
@@ -207,10 +188,6 @@ public static class PipeExtensions
     /// <summary>
     ///     Taps a value asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="action"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <returns></returns>
     public static async Task<TIn> TapAsync<TIn>(this Task<TIn> task, Action<TIn> action)
     {
         ArgumentNullException.ThrowIfNull(task);
@@ -224,10 +201,6 @@ public static class PipeExtensions
     /// <summary>
     ///     Taps a value asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="func"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <returns></returns>
     public static async Task<TIn> TapAsync<TIn>(this Task<TIn> task, Func<TIn, Task> func)
     {
         ArgumentNullException.ThrowIfNull(task);

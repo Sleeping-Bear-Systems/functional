@@ -12,9 +12,6 @@ public static class StringExtensions
     /// <summary>
     ///     Tokenizes a <see cref="string" />.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="errorFunc"></param>
-    /// <returns></returns>
     public static Result<string> AsToken(this string? value, Func<Error> errorFunc)
     {
         ArgumentNullException.ThrowIfNull(errorFunc);
@@ -25,9 +22,6 @@ public static class StringExtensions
     /// <summary>
     ///     Tokenizes a <see cref="string" />.
     /// </summary>
-    /// <param name="value"></param>
-    /// <param name="error"></param>
-    /// <returns></returns>
     public static Result<string> AsToken(this string? value, Error error)
     {
         return value.Tokenize().ToResultOk().CheckNot(string.IsNullOrWhiteSpace, error);
@@ -36,8 +30,6 @@ public static class StringExtensions
     /// <summary>
     ///     Tokenizes a <see cref="string" />.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
     public static Option<string> AsToken(this string? value)
     {
         return value.Tokenize().ToOption().CheckNot(string.IsNullOrWhiteSpace);
@@ -46,8 +38,6 @@ public static class StringExtensions
     /// <summary>
     ///     Tokenizes a <see cref="string" />.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
     /// <remarks>
     ///     Tokens are not null and have no preceding or trailing whitespace.
     /// </remarks>

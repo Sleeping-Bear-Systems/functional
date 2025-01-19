@@ -63,8 +63,6 @@ public readonly record struct Result<T> where T : notnull
     /// <summary>
     ///     Implicit operator for lifting a value to a <see cref="Result{T}" />.
     /// </summary>
-    /// <param name="ok"></param>
-    /// <returns></returns>
     public static implicit operator Result<T>(T ok)
     {
         return new Result<T>(ok);
@@ -73,8 +71,6 @@ public readonly record struct Result<T> where T : notnull
     /// <summary>
     ///     Implicit operator for lifting an <see cref="Error" /> to a <see cref="Result{T}" />.
     /// </summary>
-    /// <param name="error"></param>
-    /// <returns></returns>
     public static implicit operator Result<T>(Error error)
     {
         return new Result<T>(error);

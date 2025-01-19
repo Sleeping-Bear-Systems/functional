@@ -13,11 +13,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Binds a <see cref="Result{TIn}" /> to a <see cref="Result{TOut}" />.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="bindFunc"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Result<TOut> Bind<TIn, TOut>(this Result<TIn> result, Func<TIn, Result<TOut>> bindFunc)
         where TIn : notnull where TOut : notnull
@@ -34,12 +29,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Binds a <see cref="Result{TIn}" /> to a <see cref="Result{TOut}" />.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="bindFunc"></param>
-    /// <param name="bindErrorFunc"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Result<TOut> Bind<TIn, TOut>(
         this Result<TIn> result,
@@ -60,11 +49,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Binds a <see cref="Result{TIn}" /> to a <see cref="Result{TOut}" /> asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="bindFunc"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<TOut>> BindAsync<TIn, TOut>(
         this Task<Result<TIn>> task,
@@ -85,11 +69,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Binds a <see cref="Result{TIn}" /> to a <see cref="Result{TOut}" /> asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="bindFuncAsync"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<TOut>> BindAsync<TIn, TOut>(
         this Task<Result<TIn>> task,
@@ -110,12 +89,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Binds a <see cref="Result{TIn}" /> to a <see cref="Result{TOut}" />.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="bindFunc"></param>
-    /// <param name="bindErrorFunc"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<TOut>> BindAsync<TIn, TOut>(
         this Task<Result<TIn>> task,
@@ -138,12 +111,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Binds a <see cref="Result{TIn}" /> to a <see cref="Result{TOut}" />.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="bindFuncAsync"></param>
-    /// <param name="bindErrorFuncAsync"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<TOut>> BindAsync<TIn, TOut>(
         this Task<Result<TIn>> task,
@@ -166,11 +133,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Binds a <see cref="Result{T}" /> conditionally.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="predicate"></param>
-    /// <param name="bindFunc"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Result<T> BindIf<T>(
         this Result<T> result,
@@ -190,12 +152,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Binds a <see cref="Result{T}" /> conditionally.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="predicate"></param>
-    /// <param name="bindTrueFunc"></param>
-    /// <param name="bindFalseFunc"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Result<T> BindIf<T>(
         this Result<T> result,
@@ -219,11 +175,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Binds a <see cref="Result{T}" /> conditionally.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="predicate"></param>
-    /// <param name="bindFunc"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<T>> BindIfAsync<T>(
         this Task<Result<T>> task,
@@ -244,11 +195,6 @@ public static class ResultExtensions
 
     /// <summary>
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="predicate"></param>
-    /// <param name="bindFuncAsync"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<T>> BindIfAsync<T>(
         this Task<Result<T>> task,
@@ -269,12 +215,6 @@ public static class ResultExtensions
 
     /// <summary>
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="predicate"></param>
-    /// <param name="bindTrueFunc"></param>
-    /// <param name="bindFalseFunc"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<T>> BindIfAsync<T>(
         this Task<Result<T>> task,
@@ -299,12 +239,6 @@ public static class ResultExtensions
 
     /// <summary>
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="predicate"></param>
-    /// <param name="bindTrueFunc"></param>
-    /// <param name="bindFalseFunc"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<T>> BindIfAsync<T>(
         this Task<Result<T>> task,
@@ -474,10 +408,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Maps the error of a <see cref="Result{T}" />.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="mapFunc"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Result<T> MapError<T>(
         this Result<T> result,
@@ -495,10 +425,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Maps the error of a <see cref="Result{T}" /> asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="mapFunc"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<T>> MapErrorAsync<T>(
         this Task<Result<T>> task,
@@ -519,10 +445,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Maps the error of a <see cref="Result{T}" /> asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="mapFuncAsync"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<T>> MapErrorAsync<T>(
         this Task<Result<T>> task,
@@ -629,12 +551,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Matches a <see cref="Result{TIn}" /> to a value.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="okFunc"></param>
-    /// <param name="errorFunc"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static TOut Match<TIn, TOut>(this Result<TIn> result, Func<TIn, TOut> okFunc, Func<Error, TOut> errorFunc)
         where TIn : notnull
@@ -652,12 +568,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Matches a <see cref="Result{TIn}" /> to a value asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="okFunc"></param>
-    /// <param name="errorFunc"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<TOut> MatchAsync<TIn, TOut>(this Task<Result<TIn>> task, Func<TIn, TOut> okFunc,
         Func<Error, TOut> errorFunc)
@@ -678,12 +588,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Matches a <see cref="Result{TIn}" /> to a value asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="okFuncAsync"></param>
-    /// <param name="errorFuncAsync"></param>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<TOut> MatchAsync<TIn, TOut>(
         this Task<Result<TIn>> task,
@@ -826,11 +730,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Taps a <see cref="Result{T}" />.
     /// </summary>
-    /// <param name="result"></param>
-    /// <param name="okAction"></param>
-    /// <param name="errorAction"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static Result<T> Tap<T>(
         this Result<T> result,
@@ -853,13 +752,8 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    ///     Tap a <see cref="Result{T}" /> asynchronously.
+    ///     Taps a <see cref="Result{T}" /> asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="okAction"></param>
-    /// <param name="errorAction"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<T>> TapAsync<T>(
         this Task<Result<T>> task,
@@ -886,11 +780,6 @@ public static class ResultExtensions
     /// <summary>
     ///     Taps a <see cref="Result{T}" /> asynchronously.
     /// </summary>
-    /// <param name="task"></param>
-    /// <param name="okFuncAsync"></param>
-    /// <param name="errorFuncAsync"></param>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
     [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
     public static async Task<Result<T>> TapAsync<T>(
         this Task<Result<T>> task,

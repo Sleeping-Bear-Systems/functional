@@ -56,8 +56,6 @@ public readonly record struct Option<T> where T : notnull
     /// <summary>
     ///     Implicit operator for lifting a value to a <see cref="Option{T}" />.
     /// </summary>
-    /// <param name="some"></param>
-    /// <returns></returns>
     public static implicit operator Option<T>(T? some)
     {
         return some is null ? None : new Option<T>(some);

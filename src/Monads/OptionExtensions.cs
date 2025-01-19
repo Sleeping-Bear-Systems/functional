@@ -599,10 +599,9 @@ public static class OptionExtensions
     public static Option<T> Tap<T>(
         this Option<T> option,
         Action<T> someAction,
-        Action noneAction) where T : notnull
+        Action? noneAction = null) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(someAction);
-        ArgumentNullException.ThrowIfNull(noneAction);
 
         var (isSome, some) = option;
         if (isSome)
@@ -611,7 +610,7 @@ public static class OptionExtensions
         }
         else
         {
-            noneAction();
+            noneAction?.Invoke();
         }
 
         return option;
@@ -629,11 +628,10 @@ public static class OptionExtensions
     public static async Task<Option<T>> TapAsync<T>(
         this Task<Option<T>> task,
         Action<T> someAction,
-        Action noneAction) where T : notnull
+        Action? noneAction = null) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(someAction);
-        ArgumentNullException.ThrowIfNull(noneAction);
 
         var option = await task.ConfigureAwait(continueOnCapturedContext: false);
         var (isSome, some) = option;
@@ -643,7 +641,7 @@ public static class OptionExtensions
         }
         else
         {
-            noneAction();
+            noneAction?.Invoke();
         }
 
         return option;
@@ -661,11 +659,10 @@ public static class OptionExtensions
     public static async Task<Option<T>> TapAsync<T>(
         this Task<Option<T>> task,
         Func<T, Task> someFuncAsync,
-        Func<Task> noneFuncAsync) where T : notnull
+        Func<Task>? noneFuncAsync = null) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(someFuncAsync);
-        ArgumentNullException.ThrowIfNull(noneFuncAsync);
 
         var option = await task.ConfigureAwait(continueOnCapturedContext: false);
         var (isSome, some) = option;
@@ -673,7 +670,7 @@ public static class OptionExtensions
         {
             await someFuncAsync(some!).ConfigureAwait(continueOnCapturedContext: false);
         }
-        else
+        else if (noneFuncAsync is not null)
         {
             await noneFuncAsync().ConfigureAwait(continueOnCapturedContext: false);
         }

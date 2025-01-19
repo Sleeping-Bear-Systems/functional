@@ -695,10 +695,9 @@ public static class ResultExtensions
     public static Result<T> Tap<T>(
         this Result<T> result,
         Action<T> okAction,
-        Action<Error> errorAction) where T : notnull
+        Action<Error>? errorAction = null) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(okAction);
-        ArgumentNullException.ThrowIfNull(errorAction);
 
         var (isOk, ok, error) = result;
         if (isOk)
@@ -707,7 +706,7 @@ public static class ResultExtensions
         }
         else
         {
-            errorAction(error!);
+            errorAction?.Invoke(error!);
         }
 
         return result;
@@ -725,11 +724,10 @@ public static class ResultExtensions
     public static async Task<Result<T>> TapAsync<T>(
         this Task<Result<T>> task,
         Action<T> okAction,
-        Action<Error> errorAction) where T : notnull
+        Action<Error>? errorAction = null) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(okAction);
-        ArgumentNullException.ThrowIfNull(errorAction);
 
         var result = await task.ConfigureAwait(continueOnCapturedContext: false);
         var (isOk, ok, error) = result;
@@ -739,7 +737,7 @@ public static class ResultExtensions
         }
         else
         {
-            errorAction(error!);
+            errorAction?.Invoke(error!);
         }
 
         return result;
@@ -757,11 +755,10 @@ public static class ResultExtensions
     public static async Task<Result<T>> TapAsync<T>(
         this Task<Result<T>> task,
         Func<T, Task> okFuncAsync,
-        Func<Error, Task> errorFuncAsync) where T : notnull
+        Func<Error, Task>? errorFuncAsync = null) where T : notnull
     {
         ArgumentNullException.ThrowIfNull(task);
         ArgumentNullException.ThrowIfNull(okFuncAsync);
-        ArgumentNullException.ThrowIfNull(errorFuncAsync);
 
         var result = await task.ConfigureAwait(continueOnCapturedContext: false);
         var (isOk, ok, error) = result;
@@ -769,7 +766,7 @@ public static class ResultExtensions
         {
             await okFuncAsync(ok!).ConfigureAwait(continueOnCapturedContext: false);
         }
-        else
+        else if (errorFuncAsync is not null)
         {
             await errorFuncAsync(error!).ConfigureAwait(continueOnCapturedContext: false);
         }

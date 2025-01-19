@@ -6,8 +6,16 @@
 internal static class NullReferenceErrorTests
 {
     [Test]
-    public static void Value_IsNotNull()
+    public static void Ctor_NullTag_EmptyTag()
     {
-        Assert.That(NullReferenceError.Value, Is.Not.Null);
+        var error = new NullReferenceError();
+        Assert.That(error.Tag, Is.Empty);
+    }
+
+    [Test]
+    public static void Ctor_ValidatesBehavior()
+    {
+        var error = new NullReferenceError(tag: "tag");
+        Assert.That(error.Tag, Is.EqualTo(expected: "tag"));
     }
 }

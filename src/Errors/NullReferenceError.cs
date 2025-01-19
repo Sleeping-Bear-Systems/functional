@@ -3,14 +3,13 @@
 /// <summary>
 ///     Null reference error.
 /// </summary>
-public sealed record NullReferenceError
+public sealed record NullReferenceError : TaggedError
 {
     /// <summary>
-    ///     Singleton instance.
+    ///     Constructor.
     /// </summary>
-    public static readonly NullReferenceError Value = new();
-
-    private NullReferenceError()
+    /// <param name="tag">Tag. (optional)</param>
+    public NullReferenceError(string? tag = null) : base(tag)
     {
     }
 }

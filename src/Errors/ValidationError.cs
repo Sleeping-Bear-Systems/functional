@@ -3,26 +3,20 @@
 /// <summary>
 ///     Validation error.
 /// </summary>
-public sealed record ValidationError : Error
+public sealed record ValidationError : TaggedError
 {
     /// <summary>
     ///     Constructor.
     /// </summary>
-    /// <param name="message"></param>
-    /// <param name="tag"></param>
-    public ValidationError(string message, string? tag = null)
+    /// <param name="message">The message.</param>
+    /// <param name="tag">The tag. (optional)</param>
+    public ValidationError(string message, string? tag = null) : base(tag)
     {
         this.Message = message;
-        this.Tag = tag ?? string.Empty;
     }
 
     /// <summary>
     ///     Message.
     /// </summary>
     public string Message { get; }
-
-    /// <summary>
-    ///     Tag.
-    /// </summary>
-    public string Tag { get; }
 }

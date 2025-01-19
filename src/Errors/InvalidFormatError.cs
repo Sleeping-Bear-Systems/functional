@@ -3,14 +3,13 @@
 /// <summary>
 ///     Invalid format error.
 /// </summary>
-public sealed record InvalidFormatError
+public sealed record InvalidFormatError : TaggedError
 {
     /// <summary>
-    ///     Singleton instance.
+    ///     Constructor.
     /// </summary>
-    public static readonly InvalidFormatError Value = new();
-
-    private InvalidFormatError()
+    /// <param name="tag">Tag. (optional)</param>
+    public InvalidFormatError(string? tag = null) : base(tag)
     {
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace SleepingBear.Functional.Errors.Tests;
 
-internal static class ValueErrorTests
+internal static class ValueErrorExtensionsTests
 {
     [Test]
     public static void ToValueError_ValidatesBehavior()

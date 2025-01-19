@@ -6,8 +6,16 @@
 internal static class InvalidFormatErrorTests
 {
     [Test]
-    public static void Value_IsNotNull()
+    public static void Ctor_NullTag_EmptyTag()
     {
-        Assert.That(InvalidFormatError.Value, Is.Not.Null);
+        var error = new InvalidFormatError();
+        Assert.That(error.Tag, Is.Empty);
+    }
+
+    [Test]
+    public static void Ctor_ValidatesBehavior()
+    {
+        var error = new InvalidFormatError(tag: "tag");
+        Assert.That(error.Tag, Is.EqualTo(expected: "tag"));
     }
 }

@@ -75,4 +75,18 @@ public static class MonadExtensions
             ? value!
             : new ExceptionError(exception!);
     }
+
+    /// <summary>
+    ///     Converts an <see cref="Option{T}" /> to a <see cref="Result{T}" /> asynchronously.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="error"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static async Task<Result<T>> ToResultAsync<T>(this Task<Option<T>> task, Error error) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+
+        return (await task.ConfigureAwait(continueOnCapturedContext: false)).ToResult(error);
+    }
 }

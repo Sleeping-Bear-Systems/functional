@@ -773,6 +773,36 @@ public static class Option
     }
 
     /// <summary>
+    ///     Converts a <see cref="Task{T}" /> to a <see cref="Option{T}" />.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static async Task<Option<T>> ToOptionAsync<T>(this Task<T?> task) where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+
+        var some = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return some is null
+            ? Option<T>.None
+            : new Option<T>(some);
+    }
+
+    /// <summary>
+    ///     Converts a <see cref="ValueTask{T}" /> to a <see cref="Option{T}" />.
+    /// </summary>
+    /// <param name="task">The task.</param>
+    /// <typeparam name="T">The type of the value being lifted.</typeparam>
+    /// <returns></returns>
+    public static async Task<Option<T>> ToOptionAsync<T>(this ValueTask<T?> task) where T : notnull
+    {
+        var some = await task.ConfigureAwait(continueOnCapturedContext: false);
+        return some is null
+            ? Option<T>.None
+            : new Option<T>(some);
+    }
+
+    /// <summary>
     ///     Tries to get the value of an <see cref="Option{T}" />.
     /// </summary>
     /// <param name="option"></param>

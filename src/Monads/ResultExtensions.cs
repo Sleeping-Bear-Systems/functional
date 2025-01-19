@@ -188,6 +188,146 @@ public static class ResultExtensions
     }
 
     /// <summary>
+    ///     Binds a <see cref="Result{T}" /> conditionally.
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="predicate"></param>
+    /// <param name="bindTrueFunc"></param>
+    /// <param name="bindFalseFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static Result<T> BindIf<T>(
+        this Result<T> result,
+        Func<T, bool> predicate,
+        Func<T, Result<T>> bindTrueFunc,
+        Func<T, Result<T>> bindFalseFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(bindTrueFunc);
+        ArgumentNullException.ThrowIfNull(bindFalseFunc);
+
+        var (isOk, ok, _) = result;
+        return isOk
+            ? predicate(ok!)
+                ? bindTrueFunc(ok!)
+                : bindFalseFunc(ok!)
+            : result;
+    }
+
+    /// <summary>
+    ///     Binds a <see cref="Result{T}" /> conditionally.
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="predicate"></param>
+    /// <param name="bindFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<Result<T>> BindIfAsync<T>(
+        this Task<Result<T>> task,
+        Func<T, bool> predicate,
+        Func<T, Result<T>> bindFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(bindFunc);
+
+        var result = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isOk, ok, _) = result;
+        return isOk && predicate(ok!)
+            ? bindFunc(ok!)
+            : result;
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="predicate"></param>
+    /// <param name="bindFuncAsync"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<Result<T>> BindIfAsync<T>(
+        this Task<Result<T>> task,
+        Func<T, bool> predicate,
+        Func<T, Task<Result<T>>> bindFuncAsync)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(bindFuncAsync);
+
+        var result = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isOk, ok, _) = result;
+        return isOk && predicate(ok!)
+            ? await bindFuncAsync(ok!).ConfigureAwait(continueOnCapturedContext: false)
+            : result;
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="predicate"></param>
+    /// <param name="bindTrueFunc"></param>
+    /// <param name="bindFalseFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<Result<T>> BindIfAsync<T>(
+        this Task<Result<T>> task,
+        Func<T, bool> predicate,
+        Func<T, Result<T>> bindTrueFunc,
+        Func<T, Result<T>> bindFalseFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(bindTrueFunc);
+        ArgumentNullException.ThrowIfNull(bindFalseFunc);
+
+        var result = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isOk, ok, _) = result;
+        return isOk
+            ? predicate(ok!)
+                ? bindTrueFunc(ok!)
+                : bindFalseFunc(ok!)
+            : result;
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="task"></param>
+    /// <param name="predicate"></param>
+    /// <param name="bindTrueFunc"></param>
+    /// <param name="bindFalseFunc"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
+    public static async Task<Result<T>> BindIfAsync<T>(
+        this Task<Result<T>> task,
+        Func<T, bool> predicate,
+        Func<T, Task<Result<T>>> bindTrueFunc,
+        Func<T, Task<Result<T>>> bindFalseFunc)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(task);
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(bindTrueFunc);
+        ArgumentNullException.ThrowIfNull(bindFalseFunc);
+
+        var result = await task.ConfigureAwait(continueOnCapturedContext: false);
+        var (isOk, ok, _) = result;
+        return isOk
+            ? predicate(ok!)
+                ? await bindTrueFunc(ok!).ConfigureAwait(continueOnCapturedContext: false)
+                : await bindFalseFunc(ok!).ConfigureAwait(continueOnCapturedContext: false)
+            : result;
+    }
+
+    /// <summary>
     ///     Checks the lifted value of a <see cref="Result{T}" />.
     /// </summary>
     /// <param name="result">The <see cref="Result{T}" />.</param>

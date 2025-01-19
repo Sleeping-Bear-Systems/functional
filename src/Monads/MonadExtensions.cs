@@ -62,17 +62,16 @@ public static class MonadExtensions
     }
 
     /// <summary>
-    ///     Converts a <see cref="Exceptional{T}" /> to a <see cref="Result{T}" />.
+    ///     Converts an <see cref="Option{T}" /> to a <see cref="Result{T}" /> asynchronously.
     /// </summary>
-    /// <param name="exceptional">The <see cref="Exceptional{T}" />.</param>
+    /// <param name="task"></param>
+    /// <param name="error"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    [SuppressMessage(category: "ReSharper", checkId: "NullableWarningSuppressionIsUsed")]
-    public static Result<T> ToResult<T>(this Exceptional<T> exceptional) where T : notnull
+    public static async Task<Result<T>> ToResultAsync<T>(this Task<Option<T>> task, Error error) where T : notnull
     {
-        var (isSuccess, value, exception) = exceptional;
-        return isSuccess
-            ? value!
-            : new ExceptionError(exception!);
+        ArgumentNullException.ThrowIfNull(task);
+
+        return (await task.ConfigureAwait(continueOnCapturedContext: false)).ToResult(error);
     }
 }

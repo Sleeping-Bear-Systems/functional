@@ -1,10 +1,18 @@
 namespace SleepingBear.Functional.Common.Tests;
 
 /// <summary>
-///     Tests for <see cref="UnitExtensions" />.
+///     Tests for <see cref="FuncExtensions" />.
 /// </summary>
-internal static class UnitExtensionsTests
+internal static class FuncExtensionsTests
 {
+    [Test]
+    public static void Identity_ValidatesBehavior()
+    {
+        var value = new object();
+        var result = value.Identity();
+        Assert.That(result, Is.SameAs(value));
+    }
+
     [Test]
     public static void ToFunc_FiveParameters_ValidatesBehavior()
     {
@@ -155,5 +163,104 @@ internal static class UnitExtensionsTests
             Assert.That(returnValue, Is.EqualTo(Unit.Value));
             Assert.That(actionCalled, Is.True);
         });
+    }
+
+    [Test]
+    public static void ToUnary_2Parameters_ValidatesBehavior()
+    {
+        var unary = FuncExtensions.ToUnaryFunc<int, int, int>(Function, arg2: 2);
+        var result = unary(arg: 1);
+        Assert.That(result, Is.EqualTo(expected: 1));
+        return;
+
+        int Function(int a, int b)
+        {
+            Assert.That(b, Is.EqualTo(expected: 2));
+            return a;
+        }
+    }
+
+    [Test]
+    public static void ToUnary_3Parameters_ValidatesBehavior()
+    {
+        var unary = FuncExtensions.ToUnaryFunc<int, int, int, int>(Function, arg2: 2, arg3: 3);
+        var result = unary(arg: 1);
+        Assert.That(result, Is.EqualTo(expected: 1));
+        return;
+
+        int Function(int a, int b, int c)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(b, Is.EqualTo(expected: 2));
+                Assert.That(c, Is.EqualTo(expected: 3));
+            });
+            return a;
+        }
+    }
+
+    [Test]
+    public static void ToUnary_4Parameters_ValidatesBehavior()
+    {
+        var unary = FuncExtensions.ToUnaryFunc<int, int, int, int, int>(Function, arg2: 2, arg3: 3, arg4: 4);
+        var result = unary(arg: 1);
+        Assert.That(result, Is.EqualTo(expected: 1));
+        return;
+
+        int Function(int a, int b, int c, int d)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(b, Is.EqualTo(expected: 2));
+                Assert.That(c, Is.EqualTo(expected: 3));
+                Assert.That(d, Is.EqualTo(expected: 4));
+            });
+            return a;
+        }
+    }
+
+    [Test]
+    public static void ToUnary_5Parameters_ValidatesBehavior()
+    {
+        var unary = FuncExtensions.ToUnaryFunc<int, int, int, int, int, int>(Function, arg2: 2, arg3: 3, arg4: 4,
+            arg5: 5);
+        var result = unary(arg: 1);
+        Assert.That(result, Is.EqualTo(expected: 1));
+        return;
+
+        int Function(int a, int b, int c, int d, int e)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(b, Is.EqualTo(expected: 2));
+                Assert.That(c, Is.EqualTo(expected: 3));
+                Assert.That(d, Is.EqualTo(expected: 4));
+                Assert.That(e, Is.EqualTo(expected: 5));
+            });
+            return a;
+        }
+    }
+
+    [Test]
+    public static void ToUnary_6Parameters_ValidatesBehavior()
+    {
+        var unary = FuncExtensions.ToUnaryFunc<int, int, int, int, int, int, int>(Function, arg2: 2, arg3: 3, arg4: 4,
+            arg5: 5, arg6: 6);
+        var result = unary(arg: 1);
+        Assert.That(result, Is.EqualTo(expected: 1));
+        return;
+
+        int Function(int a, int b, int c, int d, int e, int f)
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(b, Is.EqualTo(expected: 2));
+                Assert.That(c, Is.EqualTo(expected: 3));
+                Assert.That(d, Is.EqualTo(expected: 4));
+                Assert.That(e, Is.EqualTo(expected: 5));
+                Assert.That(f, Is.EqualTo(expected: 6));
+            });
+            return a;
+        }
     }
 }

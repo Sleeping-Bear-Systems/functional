@@ -30,7 +30,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Common\SleepingBear.Functional.Common.csproj"/>
-        <ProjectReference Include="..\Testing\SleepingBear.Functional.Testing.csproj"/>
+        <ProjectReference Include="..\Monads\SleepingBear.Functional.Monads.csproj" />
     </ItemGroup>
 
 </Project>

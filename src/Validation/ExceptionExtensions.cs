@@ -468,6 +468,7 @@ public static class ExceptionExtensions
     {
         ArgumentNullException.ThrowIfNull(func);
         ArgumentNullException.ThrowIfNull(handler);
+        
         try
         {
             return func(value);

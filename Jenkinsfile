@@ -2,7 +2,6 @@ pipeline {
     agent { 
         docker {
             image 'mcr.microsoft.com/dotnet/sdk:latest'
-            label 'dotnet/sdk:latest'
         }
     }
     stages {

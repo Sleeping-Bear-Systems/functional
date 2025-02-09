@@ -1,5 +1,7 @@
 pipeline {
-    agent "node (dotnet)"
+    agent { 
+        label "node (dotnet)"
+    }
     stages {
         stage('Build') {
             steps {

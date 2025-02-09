@@ -5,20 +5,20 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                echo 'Building...'
                 sh 'dotnet build -c Release'
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                echo 'Testing...'
                 sh 'dotnet test -c Release'
             }
         }
     }
     post {
         always {
-            echo 'Cleaning up..'
+            echo 'Cleaning up...'
             cleanWs()
         }
     }

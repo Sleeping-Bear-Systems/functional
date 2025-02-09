@@ -1,3 +1,9 @@
 {
-    "cSpell.words": ["inspectcode", "nupkg", "sarif"]
+    "cSpell.words": [
+        "globaltools",
+        "inspectcode",
+        "nupkg",
+        "resharper",
+        "sarif"
+    ]
 }

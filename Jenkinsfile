@@ -1,9 +1,5 @@
 pipeline {
-    agent { 
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:latest'
-        }
-    }
+    agent "node (dotnet)"
     stages {
         stage('Build') {
             steps {
@@ -16,6 +12,12 @@ pipeline {
                 echo 'Testing..'
                 sh 'dotnet test -c Release'
             }
+        }
+    }
+    post {
+        always {
+            echo 'Cleaning up..'
+            cleanWs()
         }
     }
 }

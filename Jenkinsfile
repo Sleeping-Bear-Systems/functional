@@ -1,16 +1,18 @@
 pipeline {
-    agent any
+    agent { 
+        label 'agent (dotnet)'
+    }
     stages {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'dotnet build -C Release'
+                sh 'dotnet build -c Release'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
-                sh 'dotnet test -C Release'
+                sh 'dotnet test -c Release'
             }
         }
     }

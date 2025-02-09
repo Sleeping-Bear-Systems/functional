@@ -1,6 +1,6 @@
 pipeline {
     agent { 
-        label 'agent (dotnet)'
+        label "node (dotnet)"
     }
     stages {
         stage('Build') {
@@ -14,6 +14,12 @@ pipeline {
                 echo 'Testing..'
                 sh 'dotnet test -c Release'
             }
+        }
+    }
+    post {
+        always {
+            echo 'Cleaning up..'
+            cleanWs()
         }
     }
 }

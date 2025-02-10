@@ -1,6 +1,9 @@
 pipeline {
     agent { 
-        label "node (dotnet)"
+        // label "node (dotnet)"
+        docker {
+            image 'mcr.microsoft.com/dotnet/sdk:9.0'
+        }
     }
     stages {
         stage('Build') {

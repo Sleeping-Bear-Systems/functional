@@ -1,6 +1,6 @@
 pipeline {
     agent { 
-        // label "node (dotnet)"
+        label "node (docker)"
         docker {
             image 'mcr.microsoft.com/dotnet/sdk:9.0'
         }

@@ -1,10 +1,5 @@
 pipeline {
-    agent { 
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:9.0'
-            label 'node (docker)'
-        }
-    }
+    agent { label 'dotnet' }
     stages {
         stage('Build') {
             steps {
@@ -17,6 +12,13 @@ pipeline {
                 echo 'Testing...'
                 sh 'dotnet test -c Release'
             }
+        }
+        stage('publish') {
+            agent { label 'docker' }
+            steps {
+                sh 'docker ps'
+            }
+
         }
     }
     post {

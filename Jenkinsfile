@@ -4,6 +4,9 @@ pipeline {
             image 'mcr.microsoft.com/dotnet/sdk:9.0'
         }
     }
+    environment {
+        HOME = '/tmp'
+    }
     stages {
         stage('Build') {
             steps {

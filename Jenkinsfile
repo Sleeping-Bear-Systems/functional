@@ -8,13 +8,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
-                sh 'dotnet build -c Release'
+                sh 'dotnet build -c Release --no-launch-profile'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'dotnet test -c Release'
+                sh 'dotnet test -c Release --no-launch-profile'
             }
         }
     }

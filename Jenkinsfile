@@ -12,13 +12,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
-                sh 'dotnet build -c Release --no-launch-profile'
+                sh 'dotnet build -c Release'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'dotnet test -c Release --no-launch-profile'
+                sh 'dotnet test -c Release'
             }
         }
     }

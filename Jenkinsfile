@@ -1,8 +1,7 @@
 pipeline {
     agent { label 'dotnet && docker' }
     environment {
-        HOME = '/tmp'
-        DOTNET_CLI_HOME = "/tmp/DOTNET_CLI_HOME"
+        DOCKER_HOST = 'tcp://docker:2375'
     }
     stages {
         stage('Build') {

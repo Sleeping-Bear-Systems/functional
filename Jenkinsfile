@@ -1,9 +1,5 @@
 pipeline {
-    agent { 
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:9.0'
-        }
-    }
+    agent { label 'dotnet && docker' }
     environment {
         HOME = '/tmp'
         DOTNET_CLI_HOME = "/tmp/DOTNET_CLI_HOME"
@@ -19,6 +15,12 @@ pipeline {
             steps {
                 echo 'Testing...'
                 sh 'dotnet test -c Release'
+            }
+        }
+        stage('Publish') {
+            steps {
+                echo 'Publishing...'
+                sh 'docker ps'
             }
         }
     }

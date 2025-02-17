@@ -32,7 +32,7 @@ pipeline {
         stage('Publish') {
             steps {
                 echo 'Publishing...'
-                // sh 'dotnet nuget push **/*.nupkg --source $NUGET_API --api-key $NUGET_API_KEY'
+                sh 'dotnet nuget push **/*.nupkg --source $NUGET_API --api-key $NUGET_API_KEY'
             }
         }
     }

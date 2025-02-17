@@ -5,7 +5,7 @@ pipeline {
         }   
     }
     environment {
-        HOME = "/tmp
+        HOME = '/tmp'
         BASE_VERSION = '1.7.'
         VERSION = "${BASE_VERSION}.${BUILD_NUMBER}"
     }

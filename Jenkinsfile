@@ -7,7 +7,8 @@ pipeline {
     environment {
         HOME = '/tmp'
         BASE_VERSION = '1.7'
-        VERSION = "${BASE_VERSION}.${BUILD_NUMBER}"
+        VERSION_SUFFIX = ${env.BRANCH_NAME == 'main' ? '' : '-preview'}
+        VERSION = "${BASE_VERSION}.${BUILD_NUMBER}${VERSION_SUFFIX}"
     }
     stages {
         stage('Build') {
@@ -26,7 +27,6 @@ pipeline {
         stage('Publish') {
             steps {
                 echo 'Publishing...'
-                echo $VERSION
             }
         }
     }

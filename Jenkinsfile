@@ -29,7 +29,7 @@ pipeline {
         stage('Publish') {
             steps {
                 echo 'Publishing...'
-                dotnet nuget push "**/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY
+                dotnet nuget push "**/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key $NUGET_API_KEY
             }
         }
     }

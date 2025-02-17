@@ -11,6 +11,7 @@ pipeline {
         VERSION_SUFFIX = ""
         VERSION = "${BASE_VERSION}.${env.BUILD_NUMBER.toInteger() - BUILD_NUMBER_BASE.toInteger()}${env.BRANCH_NAME == 'main' ? '' : '-preview'}"
         NUGET_API_KEY =credentials('nuget-api-key')
+        NUGET_API ='https://api.nuget.org/v3/index.json'
     }
     stages {
         stage('Build') {
@@ -29,7 +30,7 @@ pipeline {
         stage('Publish') {
             steps {
                 echo 'Publishing...'
-                dotnet nuget push "**/*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key $NUGET_API_KEY
+                dotnet nuget push "**/*.nupkg" --source $NUGET_API --api-key $NUGET_API_KEY
             }
         }
     }

@@ -7,8 +7,8 @@ pipeline {
     environment {
         HOME = '/tmp'
         BASE_VERSION = '1.7'
-        VERSION_SUFFIX = ${env.BRANCH_NAME == 'main' ? '' : '-preview'}
-        VERSION = "${BASE_VERSION}.${BUILD_NUMBER}${VERSION_SUFFIX}"
+        VERSION_SUFFIX = ""
+        VERSION = "${BASE_VERSION}.${BUILD_NUMBER}${env.BRANCH_NAME == 'main' ? '' : '-preview'}"
     }
     stages {
         stage('Build') {

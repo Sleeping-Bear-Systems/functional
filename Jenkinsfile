@@ -6,7 +6,7 @@ pipeline {
     }
     environment {
         HOME = '/tmp'
-        BASE_VERSION = '1.7.'
+        BASE_VERSION = '1.7'
         VERSION = "${BASE_VERSION}.${BUILD_NUMBER}"
     }
     stages {

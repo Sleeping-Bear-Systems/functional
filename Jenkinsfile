@@ -20,7 +20,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-                sh 'dotnet test --no-build --no-restore -C Release --verbosity normal'
+                sh 'dotnet test --no-build --no-restore -c Release --verbosity normal'
             }
         }
         stage('Publish') {

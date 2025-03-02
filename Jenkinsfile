@@ -13,7 +13,8 @@ pipeline {
         VERSION = "${BASE_VERSION}${PREVIEW_SUFFIX}${BUILD_SUFFIX}"
         NUGET_API_KEY = credentials('nuget-api-key')
         NUGET_API ='https://api.nuget.org/v3/index.json'
-    }
+        // sets the NEXUS_USR and NEXUS_PSW environment variables
+        NEXUS=credentials('nexus')    }
     stages {
         stage('Build') {
             steps {

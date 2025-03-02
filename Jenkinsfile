@@ -17,16 +17,10 @@ pipeline {
         NEXUS = credentials('nexus')
     }
     stages {
-        stage('Build') {
+        stage('Build & Test') {
             steps {
-                echo 'Building...'
                 sh 'dotnet restore'
                 sh 'dotnet build --no-restore /p:ContinuousIntegrationBuild=true -c Release /p:Version=$VERSION'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
                 sh 'dotnet test --no-build --no-restore -c Release --verbosity normal'
             }
         }
@@ -37,7 +31,6 @@ pipeline {
                 }
             }
             steps {
-                echo 'Publishing...'
                 sh 'dotnet nuget push **/*.nupkg --source NexusHosted --skip-duplicate'
             }
         }
@@ -46,14 +39,12 @@ pipeline {
                 branch 'main'
             }
             steps {
-                echo 'Publishing...'
                 sh 'dotnet nuget push **/*.nupkg --source $NUGET_API --api-key $NUGET_API_KEY --skip-duplicate'
             }
         }
     }
     post {
         always {
-            echo 'Cleaning up...'
             cleanWs()
         }
     }

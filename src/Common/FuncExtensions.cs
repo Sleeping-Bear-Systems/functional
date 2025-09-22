@@ -25,7 +25,7 @@ public static class FuncExtensions
     }
 
     /// <summary>
-    ///     Converts an <see cref="Action" /> to a <inheritdoc cref="Func{TResult}" />.
+    ///     Converts an <see cref="Action" /> to a <see cref="Func{TResult}" />.
     /// </summary>
     public static Func<Unit> ToFunc(this Action action)
     {
@@ -39,7 +39,7 @@ public static class FuncExtensions
     }
 
     /// <summary>
-    ///     Converts an <see cref="Action{T}" /> to a <inheritdoc cref="Func{TResult}" />.
+    ///     Converts an <see cref="Action{T}" /> to a <see cref="Func{TResult}" />.
     /// </summary>
     public static Func<T1, Unit> ToFunc<T1>(this Action<T1> action)
     {
@@ -53,7 +53,7 @@ public static class FuncExtensions
     }
 
     /// <summary>
-    ///     Converts an <see cref="Action{T}" /> to a <inheritdoc cref="Func{TResult}" />.
+    ///     Converts an <see cref="Action{T}" /> to a <see cref="Func{TResult}" />.
     /// </summary>
     public static Func<T1, T2, Unit> ToFunc<T1, T2>(this Action<T1, T2> action)
     {
@@ -67,7 +67,7 @@ public static class FuncExtensions
     }
 
     /// <summary>
-    ///     Converts an <see cref="Action{T}" /> to a <inheritdoc cref="Func{TResult}" />.
+    ///     Converts an <see cref="Action{T}" /> to a <see cref="Func{TResult}" />.
     /// </summary>
     public static Func<T1, T2, T3, Unit> ToFunc<T1, T2, T3>(this Action<T1, T2, T3> action)
     {
@@ -81,7 +81,7 @@ public static class FuncExtensions
     }
 
     /// <summary>
-    ///     Converts an <see cref="Action{T}" /> to a <inheritdoc cref="Func{TResult}" />.
+    ///     Converts an <see cref="Action{T}" /> to a <see cref="Func{TResult}" />.
     /// </summary>
     public static Func<T1, T2, T3, T4, Unit> ToFunc<T1, T2, T3, T4>(this Action<T1, T2, T3, T4> action)
     {
@@ -95,7 +95,7 @@ public static class FuncExtensions
     }
 
     /// <summary>
-    ///     Converts an <see cref="Action{T}" /> to a <inheritdoc cref="Func{TResult}" />.
+    ///     Converts an <see cref="Action{T}" /> to a <see cref="Func{TResult}" />.
     /// </summary>
     public static Func<T1, T2, T3, T4, T5, Unit> ToFunc<T1, T2, T3, T4, T5>(this Action<T1, T2, T3, T4, T5> action)
     {
@@ -109,7 +109,7 @@ public static class FuncExtensions
     }
 
     /// <summary>
-    ///     Converts an <see cref="Action{T}" /> to a <inheritdoc cref="Func{TResult}" />.
+    ///     Converts an <see cref="Action{T}" /> to a <see cref="Func{TResult}" />.
     /// </summary>
     public static Func<T1, T2, T3, T4, T5, T6, Unit> ToFunc<T1, T2, T3, T4, T5, T6>(
         this Action<T1, T2, T3, T4, T5, T6> action)

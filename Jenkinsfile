@@ -19,6 +19,7 @@ pipeline {
     stages {
         stage('Build & Test') {
             steps {
+                sh 'dotnet --list-sdks'
                 sh 'dotnet restore'
                 sh 'dotnet build --no-restore /p:ContinuousIntegrationBuild=true -c Release /p:Version=$VERSION'
                 sh 'dotnet test --no-build --no-restore -c Release --verbosity normal'

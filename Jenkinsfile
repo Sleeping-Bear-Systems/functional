@@ -1,12 +1,12 @@
 pipeline {
     agent {
         docker {
-            image 'mcr.microsoft.com/dotnet/sdk:9.0'
+            image 'mcr.microsoft.com/dotnet/sdk:10.0'
         }
     }
     environment {
         HOME = '/tmp'
-        BASE_VERSION = '1.7.9'
+        BASE_VERSION = '1.8.0'
         VERSION_SUFFIX = ''
         PREVIEW_SUFFIX = "${env.BRANCH_NAME == 'main' ? '' : '-preview.'}"
         BUILD_SUFFIX = "${env.BRANCH_NAME == 'main' ? '' : env.BUILD_NUMBER}"
@@ -19,6 +19,7 @@ pipeline {
     stages {
         stage('Build & Test') {
             steps {
+                sh 'dotnet --list-sdks'
                 sh 'dotnet restore'
                 sh 'dotnet build --no-restore /p:ContinuousIntegrationBuild=true -c Release /p:Version=$VERSION'
                 sh 'dotnet test --no-build --no-restore -c Release --verbosity normal'

@@ -7,6 +7,7 @@ internal static class ValueErrorExtensionsTests
     {
         var exception = new InvalidOperationException();
         var error = exception.ToValueError();
-        Assert.Multiple(() => { Assert.That(error.Value, Is.EqualTo(exception)); });
+        using (Assert.EnterMultipleScope())
+        { Assert.That(error.Value, Is.EqualTo(exception)); }
     }
 }

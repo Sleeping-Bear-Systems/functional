@@ -10,6 +10,7 @@ internal static class ExceptionErrorExtensionsTests
     {
         var exception = new InvalidOperationException();
         var exceptionError = exception.ToExceptionError();
-        Assert.Multiple(() => { Assert.That(exceptionError.Exception, Is.SameAs(exception)); });
+        using (Assert.EnterMultipleScope())
+        { Assert.That(exceptionError.Exception, Is.SameAs(exception)); }
     }
 }

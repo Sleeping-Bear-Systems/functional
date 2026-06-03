@@ -20,22 +20,22 @@ internal static class FuncExtensionsTests
         Action<int, int, int, int, int> action = (p1, p2, p3, p4, p5) =>
         {
             actionCalled = true;
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(p1, Is.EqualTo(expected: 12));
                 Assert.That(p2, Is.EqualTo(expected: 34));
                 Assert.That(p3, Is.EqualTo(expected: 56));
                 Assert.That(p4, Is.EqualTo(expected: 78));
                 Assert.That(p5, Is.EqualTo(expected: 90));
-            });
+            }
         };
         var func = action.ToFunc();
         var returnValue = func(arg1: 12, arg2: 34, arg3: 56, arg4: 78, arg5: 90);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(returnValue, Is.EqualTo(Unit.Value));
             Assert.That(actionCalled, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -45,21 +45,21 @@ internal static class FuncExtensionsTests
         Action<int, int, int, int> action = (p1, p2, p3, p4) =>
         {
             actionCalled = true;
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(p1, Is.EqualTo(expected: 12));
                 Assert.That(p2, Is.EqualTo(expected: 34));
                 Assert.That(p3, Is.EqualTo(expected: 56));
                 Assert.That(p4, Is.EqualTo(expected: 78));
-            });
+            }
         };
         var func = action.ToFunc();
         var returnValue = func(arg1: 12, arg2: 34, arg3: 56, arg4: 78);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(returnValue, Is.EqualTo(Unit.Value));
             Assert.That(actionCalled, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -73,11 +73,11 @@ internal static class FuncExtensionsTests
         };
         var func = action.ToFunc();
         var returnValue = func(arg: 12);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(returnValue, Is.EqualTo(Unit.Value));
             Assert.That(actionCalled, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -87,7 +87,7 @@ internal static class FuncExtensionsTests
         Action<int, int, int, int, int, int> action = (p1, p2, p3, p4, p5, p6) =>
         {
             actionCalled = true;
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(p1, Is.EqualTo(expected: 12));
                 Assert.That(p2, Is.EqualTo(expected: 34));
@@ -95,15 +95,15 @@ internal static class FuncExtensionsTests
                 Assert.That(p4, Is.EqualTo(expected: 78));
                 Assert.That(p5, Is.EqualTo(expected: 90));
                 Assert.That(p6, Is.EqualTo(expected: 11));
-            });
+            }
         };
         var func = action.ToFunc();
         var returnValue = func(arg1: 12, arg2: 34, arg3: 56, arg4: 78, arg5: 90, arg6: 11);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(returnValue, Is.EqualTo(Unit.Value));
             Assert.That(actionCalled, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -113,20 +113,20 @@ internal static class FuncExtensionsTests
         Action<int, int, int> action = (p1, p2, p3) =>
         {
             actionCalled = true;
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(p1, Is.EqualTo(expected: 12));
                 Assert.That(p2, Is.EqualTo(expected: 34));
                 Assert.That(p3, Is.EqualTo(expected: 56));
-            });
+            }
         };
         var func = action.ToFunc();
         var returnValue = func(arg1: 12, arg2: 34, arg3: 56);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(returnValue, Is.EqualTo(Unit.Value));
             Assert.That(actionCalled, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -136,19 +136,19 @@ internal static class FuncExtensionsTests
         Action<int, int> action = (p1, p2) =>
         {
             actionCalled = true;
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(p1, Is.EqualTo(expected: 12));
                 Assert.That(p2, Is.EqualTo(expected: 34));
-            });
+            }
         };
         var func = action.ToFunc();
         var returnValue = func(arg1: 12, arg2: 34);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(returnValue, Is.EqualTo(Unit.Value));
             Assert.That(actionCalled, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -158,11 +158,11 @@ internal static class FuncExtensionsTests
         var action = () => { actionCalled = true; };
         var func = action.ToFunc();
         var returnValue = func();
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(returnValue, Is.EqualTo(Unit.Value));
             Assert.That(actionCalled, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -190,11 +190,11 @@ internal static class FuncExtensionsTests
 
         int Function(int a, int b, int c)
         {
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(b, Is.EqualTo(expected: 2));
                 Assert.That(c, Is.EqualTo(expected: 3));
-            });
+            }
             return a;
         }
     }
@@ -209,12 +209,12 @@ internal static class FuncExtensionsTests
 
         int Function(int a, int b, int c, int d)
         {
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(b, Is.EqualTo(expected: 2));
                 Assert.That(c, Is.EqualTo(expected: 3));
                 Assert.That(d, Is.EqualTo(expected: 4));
-            });
+            }
             return a;
         }
     }
@@ -230,13 +230,13 @@ internal static class FuncExtensionsTests
 
         int Function(int a, int b, int c, int d, int e)
         {
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(b, Is.EqualTo(expected: 2));
                 Assert.That(c, Is.EqualTo(expected: 3));
                 Assert.That(d, Is.EqualTo(expected: 4));
                 Assert.That(e, Is.EqualTo(expected: 5));
-            });
+            }
             return a;
         }
     }
@@ -252,14 +252,14 @@ internal static class FuncExtensionsTests
 
         int Function(int a, int b, int c, int d, int e, int f)
         {
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(b, Is.EqualTo(expected: 2));
                 Assert.That(c, Is.EqualTo(expected: 3));
                 Assert.That(d, Is.EqualTo(expected: 4));
                 Assert.That(e, Is.EqualTo(expected: 5));
                 Assert.That(f, Is.EqualTo(expected: 6));
-            });
+            }
             return a;
         }
     }

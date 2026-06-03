@@ -17,11 +17,11 @@ internal static class PipeExtensionsTests
             Assert.That(v, Is.EqualTo(expected: 1234));
             return v.ToString(CultureInfo.InvariantCulture);
         });
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(piped, Is.EqualTo(expected: "1234"));
             Assert.That(funcCalled, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -36,11 +36,11 @@ internal static class PipeExtensionsTests
                 Assert.That(v, Is.EqualTo(expected: 1234));
                 return v + 1;
             });
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(piped, Is.EqualTo(expected: 1234));
             Assert.That(funcCalled, Is.False);
-        });
+        }
     }
 
     [Test]
@@ -55,11 +55,11 @@ internal static class PipeExtensionsTests
                 Assert.That(v, Is.EqualTo(expected: 1234));
                 return v + 1;
             });
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(piped, Is.EqualTo(expected: 1235));
             Assert.That(funcCalled, Is.True);
-        });
+        }
     }
 
     [Test]
@@ -77,11 +77,11 @@ internal static class PipeExtensionsTests
                 funcCalled = true;
                 return v + 1;
             });
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(piped, Is.EqualTo(expected: 1234));
             Assert.That(funcCalled, Is.False);
-        });
+        }
     }
 
     [Test]
@@ -100,10 +100,10 @@ internal static class PipeExtensionsTests
                 Assert.That(v, Is.EqualTo(expected: 1234));
                 return v + 1;
             });
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(piped, Is.EqualTo(expected: 1235));
             Assert.That(funcCalled, Is.True);
-        });
+        }
     }
 }

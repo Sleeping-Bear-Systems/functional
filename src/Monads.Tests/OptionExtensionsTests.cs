@@ -187,11 +187,11 @@ internal static class OptionExtensionsTests
     {
         var option = Option<int>.None;
         var result = option.TrySome(out var some);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result, Is.False);
             Assert.That(some, Is.EqualTo(expected: 0));
-        });
+        }
     }
 
     [Test]
@@ -199,10 +199,10 @@ internal static class OptionExtensionsTests
     {
         var option = 1234.ToOption();
         var result = option.TrySome(out var some);
-        Assert.Multiple(() =>
+        using (Assert.EnterMultipleScope())
         {
             Assert.That(result, Is.True);
             Assert.That(some, Is.EqualTo(expected: 1234));
-        });
+        }
     }
 }
